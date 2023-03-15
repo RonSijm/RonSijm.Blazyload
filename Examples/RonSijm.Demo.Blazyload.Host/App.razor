@@ -1,0 +1,51 @@
+﻿@inject BlazyAssemblyLoader BlazyAssemblyLoader;
+
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync" AdditionalAssemblies="@lazyLoadedAssemblies">
+
+
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+    private List<Assembly> lazyLoadedAssemblies = new();
+
+    private async Task OnNavigateAsync(NavigationContext args)
+    {
+        try
+        {
+            if (args.Path == "fetchdata1")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib1.dll" });
+                lazyLoadedAssemblies.AddRange(assemblies);
+            }
+            else if (args.Path == "fetchdata2")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib2.dll" });
+                lazyLoadedAssemblies.AddRange(assemblies);
+            }
+            else if (args.Path == "fetchdata3")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib3.dll" });
+                lazyLoadedAssemblies.AddRange(assemblies);
+            }
+            else if (args.Path == "fetchdata4")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" });
+                lazyLoadedAssemblies.AddRange(assemblies);
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+}
