@@ -28,7 +28,24 @@ public class BlazyServiceProvider : IServiceProvider
             return new BlazyServiceScopeFactory(this);
         }
 
-        return _serviceProvider.GetService(serviceType);
+        if (!serviceType.IsGenericType || serviceType.GetGenericTypeDefinition() != typeof(Optional<>))
+        {
+            return _serviceProvider.GetService(serviceType);
+        }
+
+        dynamic wrapper = Activator.CreateInstance(serviceType);
+
+        var innerType = serviceType.GetGenericArguments()[0];
+        var valueForInnerType = _serviceProvider.GetService(innerType);
+            
+        if (valueForInnerType == null)
+        {
+            return wrapper;
+        }
+
+        wrapper?.SetValue(valueForInnerType);
+        return wrapper;
+
     }
 
     public async Task Register(params Assembly[] assemblies)

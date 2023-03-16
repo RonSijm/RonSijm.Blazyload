@@ -42,6 +42,16 @@
                 var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" });
                 lazyLoadedAssemblies.AddRange(assemblies);
             }
+            else if (args.Path == "fetchdataOptionalNull")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLibOptionalNull.dll" });
+                lazyLoadedAssemblies.AddRange(assemblies);
+            }
+            else if (args.Path == "fetchdataOptionalNotNull")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.dll" });
+                lazyLoadedAssemblies.AddRange(assemblies);
+            }
         }
         catch (Exception ex)
         {

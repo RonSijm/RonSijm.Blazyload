@@ -151,7 +151,15 @@ With default Blazor this setup would not be possible.
 Besides that, with default lazy loading in your router you would have to specify all the dlls that you'd want to load - which discourages an optimized lazy-loaded architecture with a lot of small packages, because you will have to keep track of which dlls you need in which dependency tree.
 
 With this package you can create a complicated dll dependency tree with a lot of smaller packages, which will optimize lazy loading
-  
+ 
+## Blazor optional depencies
+
+Out of the box Blazor does not support Optional dependencies. This library fixes that by intoducing `Optional<T>`
+
+`@inject Optional<IWeatherResolver> WeatherResolver`
+
+Note that it uses a custom `Optional<T>` instead of `Nullable<T>` because Nullable only accepts structs.
+ 
  ## Live Demo:
 
 ![blazyload](https://user-images.githubusercontent.com/337928/225398408-005411c6-6c71-4f66-b1a4-b2485730cbf0.gif)
@@ -170,9 +178,9 @@ With this package you can create a complicated dll dependency tree with a lot of
   
  ## TODOS before V1.0:
   
- This package is current v0.1.0. I'll increment it to V1.0.0 after the following:
+ This package is current v0.2.0. I'll increment it to V1.0.0 after the following:
   
-  - [ ] Make sure the Nuget gets build
+  - [x] Make sure the Nuget gets build
   - [ ] Make sure the CodeCov CI/CD gets run
   - [ ] I might have broken DI scoping
   - [ ] Load package in one of my actual projects and test it in more real-world scenarios

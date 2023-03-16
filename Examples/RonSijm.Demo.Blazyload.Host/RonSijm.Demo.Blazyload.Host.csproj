@@ -16,6 +16,8 @@
     <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib3.dll" />
     <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" />
     <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Component.dll" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.dll" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLibOptionalNull.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,8 +25,12 @@
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib1\RonSijm.Demo.Blazyload.WeatherLib1.csproj" />
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib2\RonSijm.Demo.Blazyload.WeatherLib2.csproj" />
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib3\RonSijm.Demo.Blazyload.WeatherLib3.csproj" />
+
     <ProjectReference Include="..\Cascade\RonSijm.Demo.Blazyload.WeatherLib4.Page\RonSijm.Demo.Blazyload.WeatherLib4.Page.csproj" />
     <ProjectReference Include="..\Cascade\RonSijm.Demo.Blazyload.WeatherLib4.Component\RonSijm.Demo.Blazyload.WeatherLib4.Component.csproj" />
+
+    <ProjectReference Include="..\Optional\RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull\RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.csproj" />
+    <ProjectReference Include="..\Optional\RonSijm.Demo.Blazyload.WeatherLibOptionalNull\RonSijm.Demo.Blazyload.WeatherLibOptionalNull.csproj" />
   </ItemGroup>
 
 </Project>
