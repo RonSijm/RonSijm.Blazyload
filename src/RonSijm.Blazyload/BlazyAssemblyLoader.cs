@@ -1,4 +1,6 @@
-﻿namespace RonSijm.Blazyload;
+﻿using RonSijm.Blazyload.Options;
+
+namespace RonSijm.Blazyload;
 
 public class BlazyAssemblyLoader
 {

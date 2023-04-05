@@ -1,8 +1,14 @@
-﻿namespace RonSijm.Blazyload;
+﻿using RonSijm.Blazyload.Mode;
+using RonSijm.Blazyload.ModeRegistration;
+using RonSijm.Blazyload.Options;
+
+namespace RonSijm.Blazyload;
 
 public class BlazyServiceProvider : IServiceProvider
 {
     private readonly ServiceCollection _services = new();
+    private readonly Dictionary<Type, Func<IServiceProvider, object>> _typeOverwrites = new();
+    private readonly List<(Func<Type, bool> Criteria, Func<Type, IServiceProvider, object> Factory)> _typeFunctionOverrides = new();
 
     private IServiceProvider _serviceProvider;
     private readonly DefaultServiceProviderFactory _serviceProviderFactory = new();
@@ -18,34 +24,38 @@ public class BlazyServiceProvider : IServiceProvider
 
         _services.AddSingleton(x => new BlazyAssemblyLoader(x.GetService<LazyAssemblyLoader>(), this));
 
+        _typeOverwrites.Add(typeof(IServiceScopeFactory), provider => new BlazyServiceScopeFactory(provider));
+
+        if (options.ResolveMode == ResolveMode.EnableOptional)
+        {
+            _typeFunctionOverrides.RegisterOptional();
+        }
+
         _serviceProvider = _serviceProviderFactory.CreateServiceProvider(_services);
     }
 
     public object GetService(Type serviceType)
     {
-        if (serviceType == typeof(IServiceScopeFactory))
+        var hasOverWrite = _typeOverwrites.TryGetValue(serviceType, out var objectFactory);
+
+        if (hasOverWrite)
         {
-            return new BlazyServiceScopeFactory(this);
+            return objectFactory(this);
         }
 
-        if (!serviceType.IsGenericType || serviceType.GetGenericTypeDefinition() != typeof(Optional<>))
+        // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator - Justification: Generates shitty linq
+        foreach (var typeFunctionOverride in _typeFunctionOverrides)
         {
-            return _serviceProvider.GetService(serviceType);
+            if (!typeFunctionOverride.Criteria(serviceType))
+            {
+                continue;
+            }
+
+            var result = typeFunctionOverride.Factory(serviceType, this);
+            return result;
         }
 
-        dynamic wrapper = Activator.CreateInstance(serviceType);
-
-        var innerType = serviceType.GetGenericArguments()[0];
-        var valueForInnerType = _serviceProvider.GetService(innerType);
-            
-        if (valueForInnerType == null)
-        {
-            return wrapper;
-        }
-
-        wrapper?.SetValue(valueForInnerType);
-        return wrapper;
-
+        return _serviceProvider.GetService(serviceType);
     }
 
     public async Task Register(params Assembly[] assemblies)

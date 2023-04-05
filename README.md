@@ -1,10 +1,10 @@
 # RonSijm.Blazyload
 
-[![.NET](https://github.com/RonSijm/RonSijm.Blazyload/actions/workflows/build_main.yml/badge.svg?branch=main)](https://github.com/RonSijm/RonSijm.Blazyload/actions/workflows/build_main.yml) [![Nuget](https://img.shields.io/nuget/v/RonSijm.Blazyload)](https://www.nuget.org/packages/RonSijm.Blazyload/) [![codecov](https://codecov.io/gh/RonSijm/RonSijm.Blazyload/branch/main/graph/badge.svg?token=PIDRVFD6IW)](https://codecov.io/gh/RonSijm/RonSijm.Blazyload)
+[![.NET](https://github.com/RonSijm/RonSijm.Blazyload/actions/workflows/build_main.yml/badge.svg?branch=main)](https://github.com/RonSijm/RonSijm.Blazyload/actions/workflows/build_main.yml) [![NuGet](https://img.shields.io/nuget/v/RonSijm.Blazyload)](https://www.nuget.org/packages/RonSijm.Blazyload/) [![Codecov](https://codecov.io/gh/RonSijm/RonSijm.Blazyload/branch/main/graph/badge.svg?token=PIDRVFD6IW)](https://codecov.io/gh/RonSijm/RonSijm.Blazyload)
 
 A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection
 
-Nuget: https://www.nuget.org/packages/RonSijm.Blazyload/
+NuGet: https://www.nuget.org/packages/RonSijm.Blazyload/
 
 # What is this library:
 
@@ -28,7 +28,7 @@ His solution is the following approach:
 So his solution creates a `ServiceProxy` / `ServiceLocator` that is not lazy-loaded, which he can inject in the non-lazy loaded project, and use it to locate services
 
 There are plenty of [articles](https://freecontent.manning.com/the-service-locator-anti-pattern/) that outline why the service locator is an anti-pattern, so I didn't like that solution.  
-(No critisism to Peter, there was no easy out-of-the-box way in Blazor to fix dependency injection without a service locator (until now :smile:))
+(No criticism to Peter, there was no easy out-of-the-box way in Blazor to fix dependency injection without a service locator (until now :smile:))
 
 # Getting started:
 
@@ -37,12 +37,23 @@ https://learn.microsoft.com/en-us/aspnet/core/blazor/webassembly-lazy-load-assem
 
 To enable Blazyload:  
 
-In your `program.cs` change your container configuration to:  
+In your `program.cs` add/change your container configuration to:  
 `builder.ConfigureContainer(new BlazyServiceProviderFactory());`
 	
+For example:
+
+````
+    public static async Task Main(string[] args)
+    {
+        var builder = WebAssemblyHostBuilder.CreateDefault(args);
+        builder.ConfigureContainer(new BlazyServiceProviderFactory());
+    	// other stuff
+    }
+````
+
  Additionally you can add some options in the constructor of the `BlazyServiceProviderFactory` which are described later.
   
-The only difference between the implementation of the totorial and using BlazyLoad:
+The only difference between the implementation of the tutorial and using Blazyload:
 
 In the tutorial they mention in `App.razor` to use:  
 `@inject LazyAssemblyLoader AssemblyLoader`
@@ -152,14 +163,23 @@ Besides that, with default lazy loading in your router you would have to specify
 
 With this package you can create a complicated dll dependency tree with a lot of smaller packages, which will optimize lazy loading
  
-## Blazor optional depencies
+## Blazor optional decencies
 
-Out of the box Blazor does not support Optional dependencies. This library fixes that by intoducing `Optional<T>`
+Out of the box Blazor does not support Optional dependencies. This library fixes that by introducing `Optional<T>`
 
 `@inject Optional<IWeatherResolver> WeatherResolver`
 
 Note that it uses a custom `Optional<T>` instead of `Nullable<T>` because Nullable only accepts structs.
  
+You can enable it in the program.cs by adding the following line:
+
+````
+builder.ConfigureContainer(new BlazyServiceProviderFactory(x =>
+{
+    x.ResolveMode = ResolveMode.EnableOptional;
+}
+````
+
  ## Live Demo:
 
 ![blazyload](https://user-images.githubusercontent.com/337928/225398408-005411c6-6c71-4f66-b1a4-b2485730cbf0.gif)
@@ -175,20 +195,6 @@ Note that it uses a custom `Optional<T>` instead of `Nullable<T>` because Nullab
   - Have a login package, and keep all other dlls not needed for non-authenticated users in a different dll. 
     - Possibly keep authenticated behind an authenticate-only downloadable url
   - Create a structure of smaller packages and only load methods that you need, instead of a large 
-  
- ## TODOS before V1.0:
-  
- This package is current v0.2.0. I'll increment it to V1.0.0 after the following:
-  
-  - [x] Make sure the Nuget gets build
-  - [ ] Make sure the CodeCov CI/CD gets run
-  - [ ] I might have broken DI scoping
-  - [ ] Load package in one of my actual projects and test it in more real-world scenarios
-  - [ ] Create a couple of nUnit tests that cover the demo project
-  - [ ] Figure out where Microsoft keeps their unittests for the default DI implementation
-    - [ ] Copy their tests and assure everything still works with Blazyload
-    - [ ] ...?
-    - [ ] Profit!  [![](https://img.shields.io/github/sponsors/ronsijm?label=Sponsor&logo=GitHub)](https://github.com/sponsors/ronsijm)
   
  ## TODOS before V1.1+:
   

@@ -11,6 +11,7 @@ namespace RonSijm.Demo.Blazyload.WeatherLib2.Properties;
 /// </summary>
 public class BlazyBootstrap
 {
+    // ReSharper disable once UnusedMember.Global
     public Task<IEnumerable<ServiceDescriptor>> Bootstrap()
     {
         var serviceCollection = new ServiceCollection();

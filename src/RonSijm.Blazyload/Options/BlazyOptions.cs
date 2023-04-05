@@ -1,9 +1,11 @@
-﻿namespace RonSijm.Blazyload;
+﻿namespace RonSijm.Blazyload.Options;
 
 public class BlazyOptions
 {
     public static bool DisableCascadeLoadingGlobally { get; set; }
     public static bool EnableLoggingForCascadeErrors { get; set; }
+
+    public ResolveMode ResolveMode { get; set; }
 
     private Dictionary<string, BlazyAssemblyOptions> _assemblyMapping;
 

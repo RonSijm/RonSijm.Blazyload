@@ -1,28 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-    <LangVersion>11</LangVersion>
-    <VersionPrefix>0.2.0</VersionPrefix>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Title>RonSijm.Blazyload</Title>
-    <Authors>Ron Sijm</Authors>
-    <Company>Ron Sijm</Company>
-    <Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
-    <PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
-    <Configurations>Debug;Release</Configurations>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+		<LangVersion>11</LangVersion>
+		<VersionPrefix>1.0.0</VersionPrefix>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>RonSijm.Blazyload</Title>
+		<Authors>Ron Sijm</Authors>
+		<Company>Ron Sijm</Company>
+		<Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
+		<PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
+		<Configurations>Debug;Release</Configurations>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.*" />
-  </ItemGroup>
+		<PackageIcon>packaging\blazyload-package-logo.png</PackageIcon>
+		<PackageReadmeFile>packaging\README.md</PackageReadmeFile>
+	</PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.*" />
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.*" />
+	</ItemGroup>
 
-  <ItemGroup>
-  </ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\packaging\blazyload-package-logo.png" Pack="true" PackagePath="packaging"/>
+		<None Include="..\..\README.md" Pack="true" PackagePath="packaging"/>
+	</ItemGroup>
 
 </Project>

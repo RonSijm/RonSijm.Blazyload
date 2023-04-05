@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using RonSijm.Blazyload;
+using RonSijm.Blazyload.Options;
 
 namespace RonSijm.Demo.Blazyload.Host.Client;
 
@@ -15,9 +16,10 @@ public class Program
 
         // Configuration if you don't want to use Properties.BlazyBootstrap
         builder.ConfigureContainer(new BlazyServiceProviderFactory(x =>
-            {
-                x.UseCustomClass("RonSijm.Demo.Blazyload.WeatherLib3", "RonSijm.Demo.Blazyload.WeatherLib3.CustomRegistrationClass").DisableCascadeLoading();
-            }));
+        {
+            x.ResolveMode = ResolveMode.EnableOptional;
+            x.UseCustomClass("RonSijm.Demo.Blazyload.WeatherLib3", "RonSijm.Demo.Blazyload.WeatherLib3.CustomRegistrationClass").DisableCascadeLoading();
+        }));
 
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");

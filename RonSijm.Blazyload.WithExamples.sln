@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RonSijm.Blazyload", "src\RonSijm.Blazyload\RonSijm.Blazyload.csproj", "{A4A2E154-DE8E-4302-95C5-DDE2510DB53A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RonSijm.Demo.Blazyload.Host", "Examples\RonSijm.Demo.Blazyload.Host\RonSijm.Demo.Blazyload.Host.csproj", "{CFE950F6-B7DB-4B61-8772-D908CDEB046E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RonSijm.Demo.Blazyload.WeatherLib1", "Examples\RonSijm.Demo.Blazyload.WeatherLib1\RonSijm.Demo.Blazyload.WeatherLib1.csproj", "{27CB07CD-44C2-46DC-B54A-FC354BD3EB13}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RonSijm.Demo.Blazyload.WeatherLib2", "Examples\RonSijm.Demo.Blazyload.WeatherLib2\RonSijm.Demo.Blazyload.WeatherLib2.csproj", "{CE3D0B46-30DD-4EC7-8468-90462E6D3079}"
@@ -29,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RonSijm.Demo.Blazyload.Weat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull", "Examples\Optional\RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull\RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.csproj", "{42BB3515-44AE-4229-B46C-3696F54642AB}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RonSijm.Demo.Blazyload.Host", "Examples\RonSijm.Demo.Blazyload.Host\RonSijm.Demo.Blazyload.Host.csproj", "{F250D926-3859-4CFD-94C7-F7D66DEFCB88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,10 +39,6 @@ Global
 		{A4A2E154-DE8E-4302-95C5-DDE2510DB53A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4A2E154-DE8E-4302-95C5-DDE2510DB53A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4A2E154-DE8E-4302-95C5-DDE2510DB53A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFE950F6-B7DB-4B61-8772-D908CDEB046E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFE950F6-B7DB-4B61-8772-D908CDEB046E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFE950F6-B7DB-4B61-8772-D908CDEB046E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFE950F6-B7DB-4B61-8772-D908CDEB046E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{27CB07CD-44C2-46DC-B54A-FC354BD3EB13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{27CB07CD-44C2-46DC-B54A-FC354BD3EB13}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27CB07CD-44C2-46DC-B54A-FC354BD3EB13}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,12 +67,15 @@ Global
 		{42BB3515-44AE-4229-B46C-3696F54642AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42BB3515-44AE-4229-B46C-3696F54642AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42BB3515-44AE-4229-B46C-3696F54642AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F250D926-3859-4CFD-94C7-F7D66DEFCB88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F250D926-3859-4CFD-94C7-F7D66DEFCB88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F250D926-3859-4CFD-94C7-F7D66DEFCB88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F250D926-3859-4CFD-94C7-F7D66DEFCB88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{CFE950F6-B7DB-4B61-8772-D908CDEB046E} = {6CA40C0F-7403-483B-973E-AFB6FA50D087}
 		{27CB07CD-44C2-46DC-B54A-FC354BD3EB13} = {FA36C97D-1EA6-4648-9BDA-79453F032DB4}
 		{CE3D0B46-30DD-4EC7-8468-90462E6D3079} = {FA36C97D-1EA6-4648-9BDA-79453F032DB4}
 		{D166A80C-3437-4514-900A-EA1D698CFCBE} = {FA36C97D-1EA6-4648-9BDA-79453F032DB4}
@@ -87,6 +86,7 @@ Global
 		{37BE4301-22F2-4C22-B36C-EFF2F23B7FC3} = {6CA40C0F-7403-483B-973E-AFB6FA50D087}
 		{1C505122-9CD9-4227-9168-BE1AB23B285A} = {37BE4301-22F2-4C22-B36C-EFF2F23B7FC3}
 		{42BB3515-44AE-4229-B46C-3696F54642AB} = {37BE4301-22F2-4C22-B36C-EFF2F23B7FC3}
+		{F250D926-3859-4CFD-94C7-F7D66DEFCB88} = {6CA40C0F-7403-483B-973E-AFB6FA50D087}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE662B2C-744A-47C4-A8A4-B6EBFFFCBE9D}
