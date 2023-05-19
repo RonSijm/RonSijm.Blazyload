@@ -27,10 +27,14 @@ jobs:
         uses: codecov/codecov-action@v2.0.3
         with:
           directory: ./coverage
-      - name: Build Release
-        run: dotnet build src --no-restore --configuration Release -o "./packages"
+      - name: Build Blazyload
+        run: dotnet build src/RonSijm.Blazyload --configuration Release -o "./packages"
+      - name: Restore dependencies of Blazyload Library
+        run: dotnet restore src/RonSijm.Blazyload.Library
+      - name: Build Blazyload Library
+        run: dotnet build src/RonSijm.Blazyload.Library --configuration Release -o "./packages"
       - name: Publish to NuGet
         env:
           NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
         run: dotnet nuget push -s https://www.nuget.org/api/v2/package -k $NUGET_API_KEY --skip-duplicate
-          ./packages/RonSijm.Blazyload.*.nupkg
+          ./packages/*.nupkg

@@ -2,8 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<LangVersion>11</LangVersion>
-		<VersionPrefix>1.1.0</VersionPrefix>
+		<LangVersion>preview</LangVersion>
+		<VersionPrefix>1.1.0.1</VersionPrefix>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>RonSijm.Blazyload.Library</Title>

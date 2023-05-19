@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
 		<LangVersion>preview</LangVersion>
-		<VersionPrefix>1.1.0</VersionPrefix>
+		<VersionPrefix>1.1.0.1</VersionPrefix>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>RonSijm.Blazyload</Title>
@@ -31,7 +31,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\RonSijm.Blazyload.Library\RonSijm.Blazyload.Library.csproj" />
+		<PackageReference Include="RonSijm.Blazyload.Library" Version="1.*" />
 	</ItemGroup>
 
 </Project>
