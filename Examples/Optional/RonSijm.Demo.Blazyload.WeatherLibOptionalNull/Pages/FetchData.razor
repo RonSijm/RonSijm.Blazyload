@@ -6,7 +6,7 @@
 
 <p>This component demonstrates lazy-loading a page with a nullable dependency, where the dependency is null.</p>
 
-@if (WeatherResolver.Value == null)
+@if (WeatherResolver == null)
 {
     <p>No weather service available.</p>
     return;

@@ -269,3 +269,6 @@ Submit a PR with a bugfix + a unit-test that is red in the current version but g
 
  - Features:
 Start a discussion to ask if the feature fits and if it's "up for grabs". If so you can build the feature
+
+ ## Contact and questions:
+I've created a Discord, though now it's just me, lol.. https://discord.gg/cDC6VkUn2X - but you can ask stuff here

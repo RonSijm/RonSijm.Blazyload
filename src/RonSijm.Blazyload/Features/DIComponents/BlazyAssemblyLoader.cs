@@ -47,8 +47,6 @@ public class BlazyAssemblyLoader
 
         try
         {
-            _loadedAssemblies = _loadedAssemblies.Concat(unattemptedAssemblies).ToHashSet();
-
             var assemblyWithOptions = new List<(string assemblyToLoad, BlazyAssemblyOptions options)>();
             foreach (var assemblyToLoad in unattemptedAssemblies)
             {
@@ -92,6 +90,8 @@ public class BlazyAssemblyLoader
                 Console.WriteLine(e);
             }
         }
+
+        _loadedAssemblies = _loadedAssemblies.Concat(unattemptedAssemblies).ToHashSet();
 
         if (isRecursive)
         {

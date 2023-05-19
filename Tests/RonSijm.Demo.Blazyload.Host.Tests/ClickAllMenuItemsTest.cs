@@ -8,7 +8,7 @@ using RonSijm.Demo.Blazyload.Host.Client;
 
 namespace RonSijm.Demo.Blazyload.Host.Tests;
 
-public class CounterCSharpTests : TestContext
+public class ClickAllMenuItemsTest : TestContext
 {
     [Fact]
     public async Task ClickAllMenuItems()
