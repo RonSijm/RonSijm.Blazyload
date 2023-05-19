@@ -1,12 +1,15 @@
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using RonSijm.Blazyload;
-using RonSijm.Blazyload.Options;
-
 namespace RonSijm.Demo.Blazyload.Host.Client;
 
 public class Program
 {
+    // Note: You don't *need* to declare your options like this, you can do it inside main.
+    // I'm doing it like this so that my config accessible to bUnit
+    public static Action<BlazyOptions> BlazyConfig { get; } = x =>
+    {
+        x.ResolveMode = ResolveMode.EnableOptional;
+        x.UseSettingsForDll("RonSijm.Demo.Blazyload.WeatherLib3").UseCustomClass("RonSijm.Demo.Blazyload.WeatherLib3.CustomRegistrationClass").DisableCascadeLoading();
+    };
+
     public static async Task Main(string[] args)
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -15,16 +18,12 @@ public class Program
         //builder.ConfigureContainer(new BlazyServiceProviderFactory());
 
         // Configuration if you don't want to use Properties.BlazyBootstrap
-        builder.ConfigureContainer(new BlazyServiceProviderFactory(x =>
-        {
-            x.ResolveMode = ResolveMode.EnableOptional;
-            x.UseCustomClass("RonSijm.Demo.Blazyload.WeatherLib3", "RonSijm.Demo.Blazyload.WeatherLib3.CustomRegistrationClass").DisableCascadeLoading();
-        }));
+        builder.UseBlazyload(BlazyConfig);
 
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
 
-        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+        builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
         await builder.Build().RunAsync();
     }

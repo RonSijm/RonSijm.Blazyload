@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.S3" Version="3.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
+  </ItemGroup>
+
+<!--Between here and the bottom-->
+
+  <ItemGroup>
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib1.dll" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib2.dll" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib3.dll" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Component.dll" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
+
+    <ProjectReference Include="..\..\RonSijm.Demo.Blazyload.WeatherLib1\RonSijm.Demo.Blazyload.WeatherLib1.csproj" />
+    <ProjectReference Include="..\..\RonSijm.Demo.Blazyload.WeatherLib2\RonSijm.Demo.Blazyload.WeatherLib2.csproj" />
+    <ProjectReference Include="..\..\RonSijm.Demo.Blazyload.WeatherLib3\RonSijm.Demo.Blazyload.WeatherLib3.csproj" />
+
+    <ProjectReference Include="..\..\Cascade\RonSijm.Demo.Blazyload.WeatherLib4.Page\RonSijm.Demo.Blazyload.WeatherLib4.Page.csproj" />
+    <ProjectReference Include="..\..\Cascade\RonSijm.Demo.Blazyload.WeatherLib4.Component\RonSijm.Demo.Blazyload.WeatherLib4.Component.csproj" />
+
+  </ItemGroup>
+
+<!--Between here and the top-->
+<!-- You can technically leave all of this out of your project. -->
+<!-- Since the projects are dynamically loaded without care about whether you actually marked an assembly as "BlazorWebAssemblyLazyLoad". -->
+<!-- You'd have to leave out both the ProjectReference and the BlazorWebAssemblyLazyLoad though, otherwise the project is non-lazy-loaded -->
+<!-- So leaving in all the project references is easiest. -->
+
+<!-- Post build event to move files from framework -->
+<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot;" />
+	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib1*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot;" />
+
+	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot;" />
+	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib2*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot;" />
+
+	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot;" />
+	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib3*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot;" />
+
+	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot;" />
+	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib4*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot;" />
+</Target>
+
+<PropertyGroup>
+	<ExcludeFoldersFromDeployment>_framework</ExcludeFoldersFromDeployment>
+	<ExcludeFoldersFromDeployment>$(ExcludeFoldersFromDeployment)</ExcludeFoldersFromDeployment>
+</PropertyGroup>
+
+</Project>

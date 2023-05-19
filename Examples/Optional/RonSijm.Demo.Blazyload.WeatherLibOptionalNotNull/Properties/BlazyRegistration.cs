@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RonSijm.Blazyload;
+using RonSijm.Blazyload.Library.Features.Consumer;
 
 namespace RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.Properties;
 

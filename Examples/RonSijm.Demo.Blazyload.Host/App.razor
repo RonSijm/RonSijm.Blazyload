@@ -1,7 +1,6 @@
 ﻿@inject BlazyAssemblyLoader BlazyAssemblyLoader;
 
-<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync" AdditionalAssemblies="@lazyLoadedAssemblies">
-
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync" AdditionalAssemblies="@_lazyLoadedAssemblies">
 
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -16,7 +15,7 @@
 </Router>
 
 @code {
-    private List<Assembly> lazyLoadedAssemblies = new();
+    private readonly List<Assembly> _lazyLoadedAssemblies = new();
 
     private async Task OnNavigateAsync(NavigationContext args)
     {
@@ -24,38 +23,38 @@
         {
             if (args.Path == "fetchdata1")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib1.dll" });
-                lazyLoadedAssemblies.AddRange(assemblies);
+                var assemblies = await BlazyAssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib1.dll");
+                _lazyLoadedAssemblies.AddRange(assemblies);
             }
             else if (args.Path == "fetchdata2")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib2.dll" });
-                lazyLoadedAssemblies.AddRange(assemblies);
+                var assemblies = await BlazyAssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib2.dll");
+                _lazyLoadedAssemblies.AddRange(assemblies);
             }
             else if (args.Path == "fetchdata3")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib3.dll" });
-                lazyLoadedAssemblies.AddRange(assemblies);
+                var assemblies = await BlazyAssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib3.dll");
+                _lazyLoadedAssemblies.AddRange(assemblies);
             }
             else if (args.Path == "fetchdata4")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" });
-                lazyLoadedAssemblies.AddRange(assemblies);
+                var assemblies = await BlazyAssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib4.Page.dll");
+                _lazyLoadedAssemblies.AddRange(assemblies);
             }
             else if (args.Path == "fetchdataOptionalNull")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLibOptionalNull.dll" });
-                lazyLoadedAssemblies.AddRange(assemblies);
+                var assemblies = await BlazyAssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLibOptionalNull.dll");
+                _lazyLoadedAssemblies.AddRange(assemblies);
             }
             else if (args.Path == "fetchdataOptionalNotNull")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.dll" });
-                lazyLoadedAssemblies.AddRange(assemblies);
+                var assemblies = await BlazyAssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.dll");
+                _lazyLoadedAssemblies.AddRange(assemblies);
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-
+            // Do Nothing
         }
     }
 }

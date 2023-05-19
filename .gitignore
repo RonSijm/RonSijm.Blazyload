@@ -170,3 +170,6 @@ $RECYCLE.BIN/
 
 # Rider Files
 .idea/
+
+# dlls moved to wwwroot
+**/wwwroot/_framework**

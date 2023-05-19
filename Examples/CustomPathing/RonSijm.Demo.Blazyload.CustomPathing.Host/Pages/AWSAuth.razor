@@ -1,0 +1,41 @@
+﻿@page "/AWSAuth"
+@inherits AWSAuthComponent
+
+<h1>AWS Auth</h1>
+
+<p>This component demonstrates lazy-loading a component from AWS using credentials.</p>
+
+<EditForm Model="@Model" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="form-group">
+        <label>Using AWS Bucket:</label>
+        <p class="mb-0"><strong>@AWSAuthHandler.AWSBucket</strong></p>
+        <p class="mb-0">You can change this in the Program.cs file.</p>
+        <p class="mb-0">You can't change it at runtime because I wired it into the dll loader already..'</p>
+        <p class="mb-0">(You can do it at runtime if you write a better handler ¯\_(ツ)_/¯)</p>
+    </div>
+
+
+    <div class="form-group">
+        <label for="accessKey">Access Key:</label>
+        <InputText id="accessKey" class="form-control" @bind-Value="@Model.AccessKey" />
+        <ValidationMessage For="@(() => Model.AccessKey)" />
+    </div>
+
+    <div class="form-group">
+        <label for="secretKey">Secret Key:</label>
+        <InputText id="secretKey" class="form-control" @bind-Value="@Model.SecretKey" />
+        <ValidationMessage For="@(() => Model.SecretKey)" />
+    </div>
+
+    <div class="form-group mt-3">
+        <button type="submit" class="btn @ButtonColor">Submit</button>
+    </div>
+</EditForm>
+
+<EditForm Model="@Model" OnValidSubmit="HandleSubmitAndLoad">
+    <div class="form-group mt-3">
+        <button type="submit" class="btn @ButtonColor">Load Dll</button>
+    </div>
+</EditForm>

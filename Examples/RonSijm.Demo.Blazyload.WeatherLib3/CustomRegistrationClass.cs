@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RonSijm.Blazyload;
-
 namespace RonSijm.Demo.Blazyload.WeatherLib3;
 
-public class CustomRegistrationClass : IBlazyBootstrap
+public class CustomRegistrationClass
+#if DEBUG
+    : RonSijm.Blazyload.Library.Features.Consumer.IBlazyBootstrap
+#endif
 {
     public Task<IEnumerable<ServiceDescriptor>> Bootstrap()
     {

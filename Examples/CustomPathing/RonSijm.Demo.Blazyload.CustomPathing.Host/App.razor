@@ -1,0 +1,59 @@
+﻿@inject BlazyAssemblyLoader BlazyAssemblyLoader;
+
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync" AdditionalAssemblies="@_lazyLoadedAssemblies">
+
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        BlazyAssemblyLoader.OnAssembliesLoaded += list =>
+        {
+            _lazyLoadedAssemblies.AddRange(list);
+            StateHasChanged();
+        };
+
+        base.OnInitialized();
+    }
+
+    private readonly List<Assembly> _lazyLoadedAssemblies = new();
+
+    private async Task OnNavigateAsync(NavigationContext args)
+    {
+        try
+        {
+            if (args.Path == "fetchdata1")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib1.dll" });
+                _lazyLoadedAssemblies.AddRange(assemblies);
+            }
+            else if (args.Path == "fetchdata2")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib2.dll" });
+            }
+            else if (args.Path == "fetchdata3")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib3.dll" });
+            }
+            else if (args.Path == "fetchdata4")
+            {
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" });
+            }
+        }
+        catch (Exception)
+        {
+            // Do nothing
+        }
+    }
+}
