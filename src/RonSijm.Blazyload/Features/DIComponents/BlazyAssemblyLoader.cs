@@ -1,4 +1,7 @@
-﻿namespace RonSijm.Blazyload.Features.DIComponents;
+﻿using System.Net.Http.Json;
+using RonSijm.Blazyload.Features.DIComponents.Models;
+
+namespace RonSijm.Blazyload.Features.DIComponents;
 
 public class BlazyAssemblyLoader
 {
@@ -6,6 +9,8 @@ public class BlazyAssemblyLoader
 
     private readonly BlazyServiceProvider _blazyServiceProvider;
     private readonly NavigationManager _navigationManager;
+
+    private HashSet<string> _preloadedDlls;
 
     public BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, NavigationManager navigationManager)
     {
@@ -31,8 +36,12 @@ public class BlazyAssemblyLoader
     /// </summary>
     private async Task<List<Assembly>> LoadAssembliesAsync(IEnumerable<string> assembliesToLoad, bool isRecursive)
     {
+        _preloadedDlls ??= await GetPreloadedAssemblies();
+
         var assembliesToLoadAsList = assembliesToLoad as List<string> ?? assembliesToLoad.ToList();
-        var unattemptedAssemblies = assembliesToLoadAsList.Where(x => !_loadedAssemblies.Contains(x)).ToList();
+        var unattemptedAssemblies = assembliesToLoadAsList
+            .Where(x => !_loadedAssemblies.Contains(x))
+            .Where(x => !_preloadedDlls.Contains(x)).ToList();
 
         var loadedAssemblies = new List<Assembly>();
 
@@ -79,6 +88,7 @@ public class BlazyAssemblyLoader
         {
             if (!isRecursive || BlazyOptions.EnableLoggingForCascadeErrors)
             {
+
                 Console.WriteLine(e);
             }
         }
@@ -93,6 +103,31 @@ public class BlazyAssemblyLoader
         OnAssembliesLoaded?.Invoke(loadedAssemblies);
 
         return loadedAssemblies;
+    }
+
+    private async Task<HashSet<string>> GetPreloadedAssemblies()
+    {
+        var preloadedDlls = new HashSet<string>();
+
+        try
+        {
+            using var client = new HttpClient();
+            var result = await client.GetFromJsonAsync<BlazorBootModel>($"{_navigationManager.BaseUri}/_framework/blazor.boot.json");
+
+            foreach (var assembly in result.Resources.Assembly)
+            {
+                preloadedDlls.Add(assembly.Key);
+            }
+
+            return preloadedDlls;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error while attempting discover preloaded dlls.");
+            Console.WriteLine(e);
+        }
+
+        return preloadedDlls;
     }
 
     private async Task<Assembly[]> LoadAssembliesWithByOptions(List<(string assemblyToLoad, BlazyAssemblyOptions options)> assembliesToLoad)
@@ -119,6 +154,9 @@ public class BlazyAssemblyLoader
             }
 
             var response = await client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            // TODO: We could add an option to do enable sha- validation
 
             var contentBytes = await response.Content.ReadAsStreamAsync();
             var assembly = AssemblyLoadContext.Default.LoadFromStream(contentBytes);
