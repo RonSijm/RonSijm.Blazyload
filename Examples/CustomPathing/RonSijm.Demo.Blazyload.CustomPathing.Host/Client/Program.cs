@@ -8,13 +8,11 @@ public class Program
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-        var awsBucket = "https://blazyload.s3.eu-central-1.amazonaws.com/";
-
         // If you do not use any custom classes, and put the bootstrapping where it's expected, you can just use this:
         // builder.UseBlazyload();
 
         var dummyAuthHandler = new DummyAuthHandler();
-        var s3AuthHandler = new AWSAuthHandler(awsBucket);
+        var s3AuthHandler = new AWSAuthHandler();
 
         builder.UseBlazyload(options =>
         {
@@ -23,7 +21,9 @@ public class Program
 
             options.UseSettingsForDll("RonSijm.Demo.Blazyload.WeatherLib3").UseOptions(x =>
             {
-                x.AbsolutePath = awsBucket; // Note: absolute paths don't include the dll name, because these settings can be used for multiple dlls at once.
+                // Note: absolute paths don't include the dll name, because these settings can be used for multiple dlls at once.
+                // Note2: I'm not setting any custom url here, because the s3AuthHandler overrules it.
+                //x.AbsolutePath = awsBucket;
                 x.DisableCascadeLoading = true;
                 x.ClassPath = "RonSijm.Demo.Blazyload.WeatherLib3.CustomRegistrationClass";
                 x.HttpHandler = s3AuthHandler.HandleAuth;

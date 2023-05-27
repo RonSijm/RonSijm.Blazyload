@@ -25,6 +25,14 @@ This library fixes all lazy-loading related things. Mainly dependency injection 
  - [x] Lazyload assemblies from class, not just from the router.
     - [x] Router is still aware of new pages/paths
 
+# Demo / Tutorial video:  
+
+[![Video of RonSijm.Blazyload](https://i.ytimg.com/vi_webp/2_ChpfpAcXI/maxresdefault.webp)](https://youtu.be/2_ChpfpAcXI)
+
+# Deployed Demo of examples Demo1:  
+
+https://ronsijm.github.io/RonSijm.Blazyload/
+
 # Dependency loading explained:
 
 Here is a picture to better explain the purpose:

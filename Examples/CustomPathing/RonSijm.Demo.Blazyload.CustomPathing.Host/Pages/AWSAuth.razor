@@ -9,13 +9,10 @@
     <DataAnnotationsValidator />
 
     <div class="form-group">
-        <label>Using AWS Bucket:</label>
-        <p class="mb-0"><strong>@AWSAuthHandler.AWSBucket</strong></p>
-        <p class="mb-0">You can change this in the Program.cs file.</p>
-        <p class="mb-0">You can't change it at runtime because I wired it into the dll loader already..'</p>
-        <p class="mb-0">(You can do it at runtime if you write a better handler ¯\_(ツ)_/¯)</p>
+        <label for="accessKey">Access Key:</label>
+        <InputText id="bucketUrl" class="form-control" @bind-Value="@Model.BucketUrl" />
+        <ValidationMessage For="@(() => Model.BucketUrl)" />
     </div>
-
 
     <div class="form-group">
         <label for="accessKey">Access Key:</label>

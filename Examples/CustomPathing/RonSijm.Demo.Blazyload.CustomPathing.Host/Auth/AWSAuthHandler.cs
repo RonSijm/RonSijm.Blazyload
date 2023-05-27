@@ -7,17 +7,13 @@ namespace RonSijm.Demo.Blazyload.CustomPathing.Host.Auth;
 
 public class AWSAuthHandler
 {
+    private string _bucketUrl;
     private string _accessKey;
     private string _secretKey;
-    public string AWSBucket { get; set; }
 
-    public AWSAuthHandler(string awsBucket)
+    public void SetCredentials(string bucketUrl, string accessKey, string secretKey)
     {
-        AWSBucket = awsBucket;
-    }
-
-    public void SetCredentials(string accessKey, string secretKey)
-    {
+        _bucketUrl = bucketUrl;
         _accessKey = accessKey;
         _secretKey = secretKey;
     }
@@ -29,23 +25,19 @@ public class AWSAuthHandler
             return false;
         }
 
-        if (assemblyOptions.AbsolutePath != AWSBucket)
-        {
-            return false;
-        }
-
         if (httpMessage.RequestUri == null)
         {
             return false;
         }
 
-        var hostSplit = httpMessage.RequestUri.Host.Split('.');
+        var bucketUri = new Uri(_bucketUrl);
+        var hostSplit = bucketUri.Host.Split('.');
         var bucket = hostSplit[0];
         var regionName = hostSplit[2];
 
         var region = RegionEndpoint.GetBySystemName(regionName);
 
-        AWSCredentials credentials = new BasicAWSCredentials(_accessKey, _secretKey);
+        var credentials = new BasicAWSCredentials(_accessKey, _secretKey);
         var s3Client = new AmazonS3Client(credentials, region);
 
         var request = new GetPreSignedUrlRequest
