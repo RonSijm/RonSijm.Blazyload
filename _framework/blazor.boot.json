@@ -23,8 +23,8 @@
       "Microsoft.JSInterop.dll": "sha256-d1AApAzy1QFD8J2+smh\/oYtL\/FrUcrezQ\/VrJOjmeYM=",
       "Microsoft.JSInterop.WebAssembly.dll": "sha256-3+dHa65PgCYOsUMlsJSDYPxt294+nWZxeMbopoWb+fA=",
       "RonSijm.Blazyload.dll": "sha256-6rv3QoWgNHCPBSAXeorKt2WGPQjj5vzJshoWgA9FuHw=",
-      "RonSijm.Blazyload.Library.dll": "sha256-2NmdfQo1vOm65HlXtlw0tJQFWa2lh+fZvi02TQ1\/vic=",
-      "RonSijm.Demo.Blazyload.Host.dll": "sha256-mxyGf3ZIM2dCjs2yOhZTl5u8Jnp\/2hcuujPpfPdtpzM=",
+      "RonSijm.Blazyload.Library.dll": "sha256-t8NrKxcvOcBVcgHqOulQ2+eWqW1yREUw7TcL6M+u6gA=",
+      "RonSijm.Demo.Blazyload.Host.dll": "sha256-Hz5StBqaKRa7OPF5boUoQsj04EeLFOakJNywKAK4gH8=",
       "System.Collections.Concurrent.dll": "sha256-qE\/ugUbw0U1RUquaBH1DV6yvoc+VlBgxNl8lZpNj8H4=",
       "System.Collections.dll": "sha256-JVP7e1BcOYpsHY+MaIuRHSF3n3CaPEBIqH1YuAN7jdY=",
       "System.ComponentModel.dll": "sha256-nDL4uAnV8XjBp7HMR8402tCIjKLnxen\/fQEcevUyqXs=",
@@ -46,13 +46,13 @@
     },
     "extensions": null,
     "lazyAssembly": {
-      "RonSijm.Demo.Blazyload.WeatherLib1.dll": "sha256-wHNH0hK\/ptq3hwuRvQnAgSTLfX48waWE3u07t8liO\/0=",
+      "RonSijm.Demo.Blazyload.WeatherLib1.dll": "sha256-U4HqyPWqNHO79sf+s+nNALZ6AWc52\/JWT0isqnCxUAQ=",
       "RonSijm.Demo.Blazyload.WeatherLib2.dll": "sha256-w7scnceqhklxP12t35K7vFklYTzaJv4DAOSZbiHa9\/g=",
       "RonSijm.Demo.Blazyload.WeatherLib3.dll": "sha256-IvlrPhL69dpIIBJDHt6YgVXQPvgid56H26kk4yWz\/JU=",
       "RonSijm.Demo.Blazyload.WeatherLib4.Component.dll": "sha256-aKXkEy\/vFf8iE8OHTWOc5F1Rb88kd3G\/GDBRKUjSjdY=",
       "RonSijm.Demo.Blazyload.WeatherLib4.Page.dll": "sha256-JmWilAF4\/eLN6aNKL5i96C40iuuHOv3Xg7M\/XWaPUoU=",
-      "RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.dll": "sha256-FySrJiMVDMis7qTAq7vME83A1YlRYEkQCGS4VRFTG\/w=",
-      "RonSijm.Demo.Blazyload.WeatherLibOptionalNull.dll": "sha256-BkvSU\/92G1V1RcakAY161pavR59ge1+wUlxYnem0WVY="
+      "RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.dll": "sha256-REfqzWUBpq0WRbGHU6XiXCZ45L+OTQsD3BnyEgcCLLc=",
+      "RonSijm.Demo.Blazyload.WeatherLibOptionalNull.dll": "sha256-rbAzfT7fxYmv9wCz67WQJOSoVIgxmCaUZ22zr\/HYel4="
     },
     "libraryInitializers": null,
     "pdb": null,
