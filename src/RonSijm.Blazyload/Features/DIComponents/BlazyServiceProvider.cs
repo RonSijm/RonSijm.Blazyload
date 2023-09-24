@@ -1,14 +1,20 @@
-﻿namespace RonSijm.Blazyload.Features.DIComponents;
+﻿using ServiceProviderOptions = RonSijm.Blazyload.MicrosoftServiceProvider.ServiceProviderOptions;
 
-public class BlazyServiceProvider : IServiceProvider
+namespace RonSijm.Blazyload.Features.DIComponents;
+
+public interface IBlazyInternalServiceProvider
+{
+    bool TryGetServiceFromOverride(Type serviceType, out object value);
+}
+
+public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvider
 {
     private readonly ServiceCollection _services = new();
     private readonly Dictionary<Type, Func<IServiceProvider, object>> _typeOverwrites = new();
     private readonly List<(Func<Type, bool> Criteria, Func<Type, IServiceProvider, object> Factory)> _typeFunctionOverrides = new();
 
     private IServiceProvider _serviceProvider;
-    private readonly DefaultServiceProviderFactory _serviceProviderFactory = new();
-    
+
     public BlazyOptions Options { get; }
 
     public BlazyServiceProvider(IEnumerable<ServiceDescriptor> services, BlazyOptions options)
@@ -28,16 +34,34 @@ public class BlazyServiceProvider : IServiceProvider
             _typeFunctionOverrides.RegisterOptional();
         }
 
-        _serviceProvider = _serviceProviderFactory.CreateServiceProvider(_services);
+        foreach (var factory in options.AdditionalFactories)
+        {
+            _typeFunctionOverrides.Add(factory);
+        }
+
+        _serviceProvider =  new MicrosoftServiceProvider.MicrosoftServiceProvider(_services, ServiceProviderOptions.Default, this);
     }
 
     public object GetService(Type serviceType)
+    {
+        if (TryGetServiceFromOverride(serviceType, out var value))
+        {
+            return value;
+        }
+
+        return _serviceProvider.GetService(serviceType);
+    }
+
+    public bool TryGetServiceFromOverride(Type serviceType, out object value)
     {
         var hasOverWrite = _typeOverwrites.TryGetValue(serviceType, out var objectFactory);
 
         if (hasOverWrite)
         {
-            return objectFactory(this);
+            {
+                value = objectFactory(this);
+                return true;
+            }
         }
 
         // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator - Justification: Generates shitty linq
@@ -49,10 +73,14 @@ public class BlazyServiceProvider : IServiceProvider
             }
 
             var result = typeFunctionOverride.Factory(serviceType, this);
-            return result;
+            {
+                value = result;
+                return true;
+            }
         }
 
-        return _serviceProvider.GetService(serviceType);
+        value = null;
+        return false;
     }
 
     public async Task Register(params Assembly[] assemblies)
@@ -83,7 +111,7 @@ public class BlazyServiceProvider : IServiceProvider
             {
                 // If there is a class but no method, that's an error, so we log out it.
                 // Don't think there's a need to throw anything.
-                Console.Write("Error: BlazyBootstrap Class found but no GetServices");
+                Console.Write(@"Error: BlazyBootstrap Class found but no GetServices");
                 continue;
             }
 
@@ -125,6 +153,6 @@ public class BlazyServiceProvider : IServiceProvider
 
     public void CreateServiceProvider()
     {
-        _serviceProvider = _serviceProviderFactory.CreateServiceProvider(_services);
+        _serviceProvider = new MicrosoftServiceProvider.MicrosoftServiceProvider(_services, ServiceProviderOptions.Default, this);
     }
 }

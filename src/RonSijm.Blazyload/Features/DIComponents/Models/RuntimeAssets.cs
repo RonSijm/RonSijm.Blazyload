@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿// ReSharper disable global UnusedMember.Global
+
+using System.Text.Json.Serialization;
 
 namespace RonSijm.Blazyload.Features.DIComponents.Models;
 

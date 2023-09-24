@@ -9,6 +9,8 @@ public class BlazyOptions
 
     private List<(Func<string, bool> Criteria, BlazyAssemblyOptions Options)> _assemblyMapping;
 
+    public List<(Func<Type, bool> Criteria, Func<Type, IServiceProvider, object> Factory)> AdditionalFactories { get; } = new();
+
     public BlazyAssemblyOptions GetOptions(string assemblyName)
     {
         if (_assemblyMapping == null)
@@ -16,7 +18,7 @@ public class BlazyOptions
             return null;
         }
 
-        if (assemblyName.EndsWith(".dll"))
+        if (assemblyName.EndsWith(".dll", StringComparison.Ordinal))
         {
             assemblyName = assemblyName.Replace(".dll", string.Empty);
         }

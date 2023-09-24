@@ -1,7 +1,9 @@
 ﻿namespace RonSijm.Blazyload.Features.Bootstapping;
 
+// ReSharper disable once UnusedType.Global - Justification: Used by library consumers
 public static class BlazyloadBootstapper
 {
+    // ReSharper disable once UnusedMember.Global - Justification: Used by library consumers
     public static void UseBlazyload(this WebAssemblyHostBuilder builder, Action<BlazyOptions> optionsConfig = null)
     {
         var options = new BlazyOptions();

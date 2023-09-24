@@ -1,22 +1,16 @@
-﻿using System.Net.Http.Json;
+﻿// ReSharper disable global EventNeverSubscribedTo.Global - Justification: Used by library consumers
+// ReSharper disable global UnusedMember.Global - Justification: Used by library consumers
+
+using System.Net.Http.Json;
 using RonSijm.Blazyload.Features.DIComponents.Models;
 
 namespace RonSijm.Blazyload.Features.DIComponents;
 
-public class BlazyAssemblyLoader
+public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, NavigationManager navigationManager)
 {
     private HashSet<string> _loadedAssemblies = new();
 
-    private readonly BlazyServiceProvider _blazyServiceProvider;
-    private readonly NavigationManager _navigationManager;
-
     private HashSet<string> _preloadedDlls;
-
-    public BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, NavigationManager navigationManager)
-    {
-        _navigationManager = navigationManager;
-        _blazyServiceProvider = blazyServiceProvider;
-    }
 
     public event Action<List<Assembly>> OnAssembliesLoaded;
 
@@ -50,7 +44,7 @@ public class BlazyAssemblyLoader
             var assemblyWithOptions = new List<(string assemblyToLoad, BlazyAssemblyOptions options)>();
             foreach (var assemblyToLoad in unattemptedAssemblies)
             {
-                BlazyAssemblyOptions options = _blazyServiceProvider.Options.GetOptions(assemblyToLoad);
+                var options = blazyServiceProvider.Options.GetOptions(assemblyToLoad);
                 assemblyWithOptions.Add((assemblyToLoad, options));
             }
 
@@ -63,12 +57,12 @@ public class BlazyAssemblyLoader
 
             loadedAssemblies.AddRange(assemblies);
 
-            await _blazyServiceProvider.Register(assemblies);
+            await blazyServiceProvider.Register(assemblies);
 
             foreach (var assembly in assemblies)
             {
                 var assemblyName = $"{assembly.GetName().Name}";
-                var assemblyOptions = _blazyServiceProvider.Options?.GetOptions(assemblyName);
+                var assemblyOptions = blazyServiceProvider.Options?.GetOptions(assemblyName);
 
                 if (BlazyOptions.DisableCascadeLoadingGlobally && assemblyOptions is { DisableCascadeLoading: true })
                 {
@@ -99,7 +93,7 @@ public class BlazyAssemblyLoader
         }
 
         // Only at the end of the recursive loop we rebuild the service provider, and call consumers
-        _blazyServiceProvider.CreateServiceProvider();
+        blazyServiceProvider.CreateServiceProvider();
         OnAssembliesLoaded?.Invoke(loadedAssemblies);
 
         return loadedAssemblies;
@@ -112,7 +106,7 @@ public class BlazyAssemblyLoader
         try
         {
             using var client = new HttpClient();
-            var result = await client.GetFromJsonAsync<BlazorBootModel>($"{_navigationManager.BaseUri}/_framework/blazor.boot.json");
+            var result = await client.GetFromJsonAsync<BlazorBootModel>($"{navigationManager.BaseUri}/_framework/blazor.boot.json");
 
             foreach (var assembly in result.Resources.Assembly)
             {
@@ -123,7 +117,7 @@ public class BlazyAssemblyLoader
         }
         catch (Exception e)
         {
-            Console.WriteLine("Error while attempting discover preloaded dlls.");
+            Console.WriteLine(@"Error while attempting discover preloaded dlls.");
             Console.WriteLine(e);
         }
 
@@ -171,11 +165,11 @@ public class BlazyAssemblyLoader
     {
         var options = assemblyToLoad.options;
 
-        var dllLocation = options == null ? // If options is null, 
-            $"{_navigationManager.BaseUri}/_framework/" : // use default path
+        var dllLocation = options == null ? // If options is null,
+            $"{navigationManager.BaseUri}/_framework/" : // use default path
             options.AbsolutePath ?? // If AbsolutePath isn't null, use that.
-            (options.RelativePath != null ? $"{_navigationManager.BaseUri}{assemblyToLoad.options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
-                $"{_navigationManager.BaseUri}/_framework/"); // Else just use default path
+            (options.RelativePath != null ? $"{navigationManager.BaseUri}{assemblyToLoad.options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
+                $"{navigationManager.BaseUri}/_framework/"); // Else just use default path
 
         return dllLocation;
     }

@@ -9,7 +9,7 @@ public class BlazyServiceProviderFactory : IServiceProviderFactory<BlazyBuilder>
         _options = options;
         serviceCollection.AddSingleton<BlazyAssemblyLoader>();
     }
-    
+
     public BlazyBuilder CreateBuilder(IServiceCollection services)
     {
         var container = new BlazyBuilder(services);
