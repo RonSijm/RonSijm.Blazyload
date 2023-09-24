@@ -24,6 +24,7 @@ This library fixes all lazy-loading related things. Mainly dependency injection 
    - [x] Append path parameters to the load requests
  - [x] Lazyload assemblies from class, not just from the router.
     - [x] Router is still aware of new pages/paths
+ - [x] Easily register Open Generics with a custom factory
 
 # Demo / Tutorial video:  
 

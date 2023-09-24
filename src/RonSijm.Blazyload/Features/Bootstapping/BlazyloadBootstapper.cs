@@ -1,4 +1,6 @@
-﻿namespace RonSijm.Blazyload.Features.Bootstapping;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+
+namespace RonSijm.Blazyload.Features.Bootstapping;
 
 // ReSharper disable once UnusedType.Global - Justification: Used by library consumers
 public static class BlazyloadBootstapper

@@ -29,7 +29,7 @@ public class Program
                 x.HttpHandler = s3AuthHandler.HandleAuth;
             });
 
-            options.UseSettingsWhen(assembly => assembly.StartsWith("RonSijm.Demo.Blazyload.WeatherLib4")).UseCustomRelativePath("_framework/WeatherLib4/");
+            options.UseSettingsWhen(assembly => assembly.StartsWith("RonSijm.Demo.Blazyload.WeatherLib4", StringComparison.InvariantCultureIgnoreCase)).UseCustomRelativePath("_framework/WeatherLib4/");
         });
 
         builder.RootComponents.Add<App>("#app");

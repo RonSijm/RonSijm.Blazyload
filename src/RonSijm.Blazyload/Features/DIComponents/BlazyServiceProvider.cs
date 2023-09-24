@@ -29,11 +29,6 @@ public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvi
 
         _typeOverwrites.Add(typeof(IServiceScopeFactory), provider => new BlazyServiceScopeFactory(provider));
 
-        if (options.ResolveMode == ResolveMode.EnableOptional)
-        {
-            _typeFunctionOverrides.RegisterOptional();
-        }
-
         foreach (var factory in options.AdditionalFactories)
         {
             _typeFunctionOverrides.Add(factory);

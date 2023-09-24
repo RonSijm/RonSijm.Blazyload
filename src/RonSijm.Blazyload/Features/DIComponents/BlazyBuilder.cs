@@ -1,17 +1,15 @@
 ﻿namespace RonSijm.Blazyload.Features.DIComponents;
 
-public class BlazyBuilder
+public class BlazyBuilder(IServiceCollection services)
 {
-    private readonly IServiceCollection _services;
-
-    public BlazyBuilder(IServiceCollection services)
-    {
-        _services = services;
-    }
-
     public IServiceProvider GetServiceProvider(BlazyOptions blazyOptions)
     {
-        var serviceProvider = new BlazyServiceProvider(_services, blazyOptions);
+        if (blazyOptions.ResolveMode == ResolveMode.EnableOptional)
+        {
+            blazyOptions.AdditionalFactories.RegisterOptional();
+        }
+
+        var serviceProvider = new BlazyServiceProvider(services, blazyOptions);
 
         return serviceProvider;
     }

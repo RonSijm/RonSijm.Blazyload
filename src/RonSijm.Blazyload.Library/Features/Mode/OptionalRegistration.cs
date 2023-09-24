@@ -1,26 +1,29 @@
-﻿namespace RonSijm.Blazyload.Library.Features.Mode;
+﻿using RonSijm.Blazyload.Library.Features.Helpers;
+
+namespace RonSijm.Blazyload.Library.Features.Mode;
 
 public static class OptionalRegistration
 {
     public static void RegisterOptional(this List<(Func<Type, bool> Criteria, Func<Type, IServiceProvider, object> Factory)> typeFunctionOverrides)
     {
-        var isOptionalFunc = new Func<Type, bool>(serviceType => serviceType.IsGenericType && serviceType.GetGenericTypeDefinition() == typeof(Optional<>));
-        var optionalFactory = new Func<Type, IServiceProvider, object>((serviceType, provider) =>
+        var result = OpenGenericServiceRegistration.RegisterOpenGeneric(typeof(Optional<>), (type, provider) => CreateOptionalRegistration(typeof(Optional<>), type, provider));
+
+        typeFunctionOverrides.Add(result);
+    }
+
+    private static object CreateOptionalRegistration(Type parentType, Type childType, IServiceProvider provider)
+    {
+        var optional = parentType.MakeGenericType(childType);
+        dynamic wrapper = Activator.CreateInstance(optional);
+
+        var valueForInnerType = provider.GetService(childType);
+
+        if (valueForInnerType == null)
         {
-            dynamic wrapper = Activator.CreateInstance(serviceType);
-
-            var innerType = serviceType.GetGenericArguments()[0];
-            var valueForInnerType = provider.GetService(innerType);
-
-            if (valueForInnerType == null)
-            {
-                return wrapper;
-            }
-
-            wrapper?.SetValue(valueForInnerType);
             return wrapper;
-        });
+        }
 
-        typeFunctionOverrides.Add((isOptionalFunc, optionalFactory));
+        wrapper?.SetValue(valueForInnerType);
+        return wrapper;
     }
 }

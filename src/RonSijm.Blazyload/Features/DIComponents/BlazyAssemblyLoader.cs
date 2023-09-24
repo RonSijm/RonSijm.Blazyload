@@ -2,6 +2,7 @@
 // ReSharper disable global UnusedMember.Global - Justification: Used by library consumers
 
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Components;
 using RonSijm.Blazyload.Features.DIComponents.Models;
 
 namespace RonSijm.Blazyload.Features.DIComponents;

@@ -1,4 +1,6 @@
-﻿namespace RonSijm.Blazyload.Library.Features.Consumer;
+﻿using Microsoft.Extensions.DependencyInjection;
+
+namespace RonSijm.Blazyload.Library.Features.Consumer;
 
 /// <summary>
 /// Interface for bootstrapped classes

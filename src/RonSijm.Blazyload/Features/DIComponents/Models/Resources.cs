@@ -1,4 +1,4 @@
-﻿
+﻿// ReSharper disable global UnusedMember.Global
 
 using System.Text.Json.Serialization;
 
