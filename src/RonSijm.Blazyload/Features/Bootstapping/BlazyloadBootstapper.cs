@@ -12,6 +12,6 @@ public static class BlazyloadBootstapper
         optionsConfig?.Invoke(options);
 
         // Not registering services here, but in BlazyServiceProviderFactory instead, so that a consumer (like bUnit) will always have the required services registered.
-        builder.ConfigureContainer(new BlazyServiceProviderFactory(options, builder.Services));
+        builder.ConfigureContainer(new BlazyServiceProviderFactory(options));
     }
 }

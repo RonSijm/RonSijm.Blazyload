@@ -26,7 +26,6 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
 
         public override Type ServiceType { get; }
 
-        public override Type ImplementationType => ConstructorInfo.DeclaringType;
-        public override CallSiteKind Kind { get; } = CallSiteKind.Constructor;
+        public override CallSiteKind Kind => CallSiteKind.Constructor;
     }
 }

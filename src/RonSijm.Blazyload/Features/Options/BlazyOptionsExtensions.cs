@@ -1,5 +1,7 @@
-﻿namespace RonSijm.Blazyload.Features.Options;
+﻿// ReSharper disable global UnusedMember.Global
+// ReSharper disable global UnusedType.Global
 
+namespace RonSijm.Blazyload.Features.Options;
 public static class BlazyOptionsExtensions
 {
     public static SettingsForAssembly UseCustomClass(this SettingsForAssembly options, string classPath)

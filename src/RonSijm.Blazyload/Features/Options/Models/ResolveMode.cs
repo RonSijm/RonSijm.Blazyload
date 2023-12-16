@@ -1,4 +1,6 @@
-﻿namespace RonSijm.Blazyload.Features.Options.Models;
+﻿// ReSharper disable global UnusedMember.Global
+
+namespace RonSijm.Blazyload.Features.Options.Models;
 
 public enum ResolveMode
 {

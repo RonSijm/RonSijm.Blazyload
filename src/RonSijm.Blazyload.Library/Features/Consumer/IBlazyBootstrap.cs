@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿// ReSharper disable global UnusedMember.Global
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RonSijm.Blazyload.Library.Features.Consumer;
 

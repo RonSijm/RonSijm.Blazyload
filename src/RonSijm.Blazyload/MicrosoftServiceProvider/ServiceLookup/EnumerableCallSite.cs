@@ -15,7 +15,6 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
         }
 
         public override Type ServiceType => typeof(IEnumerable<>).MakeGenericType(ItemType);
-        public override Type ImplementationType  => ItemType.MakeArrayType();
-        public override CallSiteKind Kind { get; } = CallSiteKind.Enumerable;
+        public override CallSiteKind Kind => CallSiteKind.Enumerable;
     }
 }

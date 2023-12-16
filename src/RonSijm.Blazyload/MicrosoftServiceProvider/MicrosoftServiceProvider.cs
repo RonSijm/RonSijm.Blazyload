@@ -118,7 +118,7 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider
             OnResolve(serviceType, serviceProviderEngineScope);
 
             var result = realizedService.Invoke(serviceProviderEngineScope);
-            System.Diagnostics.Debug.Assert(result is null || CallSiteFactory.IsService(serviceType));
+            //System.Diagnostics.Debug.Assert(result is null || CallSiteFactory.IsService(serviceType));
             return result;
         }
 
@@ -161,11 +161,6 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider
             }
 
             return _ => null;
-        }
-
-        internal void ReplaceServiceAccessor(ServiceCallSite callSite, Func<ServiceProviderEngineScope, object> accessor)
-        {
-            _realizedServices[callSite.ServiceType] = accessor;
         }
 
         internal IServiceScope CreateScope()

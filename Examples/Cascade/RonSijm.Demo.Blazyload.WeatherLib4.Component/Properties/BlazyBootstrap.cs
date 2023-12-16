@@ -2,6 +2,7 @@
 
 namespace RonSijm.Demo.Blazyload.WeatherLib4.Component.Properties;
 
+// ReSharper disable once UnusedType.Global
 public class BlazyBootstrap
 {
     // ReSharper disable once UnusedMember.Global

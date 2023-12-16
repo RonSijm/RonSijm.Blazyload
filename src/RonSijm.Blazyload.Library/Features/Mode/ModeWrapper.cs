@@ -35,6 +35,7 @@
 
         public T Value { get; private set; }
 
+        // ReSharper disable once UnusedMember.Global
         internal void SetValue(object value)
         {
             Value = value as T;

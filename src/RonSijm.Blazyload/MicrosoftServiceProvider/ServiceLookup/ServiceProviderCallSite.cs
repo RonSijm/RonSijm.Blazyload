@@ -10,7 +10,6 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
         }
 
         public override Type ServiceType { get; } = typeof(IServiceProvider);
-        public override Type ImplementationType { get; } = typeof(MicrosoftServiceProvider);
-        public override CallSiteKind Kind { get; } = CallSiteKind.ServiceProvider;
+        public override CallSiteKind Kind => CallSiteKind.ServiceProvider;
     }
 }

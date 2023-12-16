@@ -3,6 +3,7 @@ using RonSijm.Blazyload.Library.Features.Consumer;
 
 namespace RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.Properties;
 
+// ReSharper disable once UnusedType.Global
 public class BlazyBootstrap : IBlazyBootstrap
 {
     public Task<IEnumerable<ServiceDescriptor>> Bootstrap()

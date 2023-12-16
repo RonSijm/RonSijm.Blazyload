@@ -7,9 +7,6 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
 {
     internal sealed class ServiceProviderEngineScope : IServiceScope, IServiceProvider, IAsyncDisposable, IServiceScopeFactory
     {
-        // For testing only
-        internal IList<object> Disposables => _disposables ?? (IList<object>)Array.Empty<object>();
-
         private bool _disposed;
         private List<object> _disposables;
 

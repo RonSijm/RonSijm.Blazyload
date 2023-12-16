@@ -20,7 +20,6 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
         }
 
         public override Type ServiceType => _serviceType;
-        public override Type ImplementationType => DefaultValue?.GetType() ?? _serviceType;
-        public override CallSiteKind Kind { get; } = CallSiteKind.Constant;
+        public override CallSiteKind Kind => CallSiteKind.Constant;
     }
 }

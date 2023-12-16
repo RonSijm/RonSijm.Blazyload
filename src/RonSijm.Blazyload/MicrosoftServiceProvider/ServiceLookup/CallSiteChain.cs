@@ -7,12 +7,7 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
 {
     internal sealed class CallSiteChain
     {
-        private readonly Dictionary<Type, ChainItemInfo> _callSiteChain;
-
-        public CallSiteChain()
-        {
-            _callSiteChain = new Dictionary<Type, ChainItemInfo>();
-        }
+        private readonly Dictionary<Type, ChainItemInfo> _callSiteChain = new();
 
         public void CheckCircularDependency(Type serviceType)
         {
@@ -69,16 +64,10 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
             builder.Append(TypeNameHelper.GetTypeDisplayName(currentlyResolving));
         }
 
-        private readonly struct ChainItemInfo
+        private readonly struct ChainItemInfo(int order, Type implementationType)
         {
-            public int Order { get; }
-            public Type ImplementationType { get; }
-
-            public ChainItemInfo(int order, Type implementationType)
-            {
-                Order = order;
-                ImplementationType = implementationType;
-            }
+            public int Order { get; } = order;
+            public Type ImplementationType { get; } = implementationType;
         }
     }
 }

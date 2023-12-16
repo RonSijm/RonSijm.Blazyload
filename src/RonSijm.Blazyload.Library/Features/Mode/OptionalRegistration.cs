@@ -2,6 +2,7 @@
 
 namespace RonSijm.Blazyload.Library.Features.Mode;
 
+// ReSharper disable once UnusedType.Global
 public static class OptionalRegistration
 {
     public static void RegisterOptional(this List<(Func<Type, bool> Criteria, Func<Type, IServiceProvider, object> Factory)> typeFunctionOverrides)

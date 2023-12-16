@@ -28,8 +28,6 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
             Populate();
         }
 
-        internal ServiceDescriptor[] Descriptors => _descriptors;
-
         private void Populate()
         {
             foreach (var descriptor in _descriptors)
@@ -92,11 +90,7 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
         /// be preserved on the type being passed to the generic argument. But when the interface/service type also has
         /// the annotations, the trimmer will see which members need to be preserved on the closed generic argument type.
         /// </remarks>
-        private static void ValidateTrimmingAnnotations(
-            Type serviceType,
-            Type[] serviceTypeGenericArguments,
-            Type implementationType,
-            Type[] implementationTypeGenericArguments)
+        private static void ValidateTrimmingAnnotations(Type serviceType, Type[] serviceTypeGenericArguments, Type implementationType, Type[] implementationTypeGenericArguments)
         {
             Debug.Assert(serviceTypeGenericArguments.Length == implementationTypeGenericArguments.Length);
 
@@ -142,17 +136,6 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
             // The DynamicallyAccessedMemberTypes don't need to exactly match.
             // The service type needs to preserve a superset of the members required by the implementation type.
             return serviceDynamicallyAccessedMembers.HasFlag(implementationDynamicallyAccessedMembers);
-        }
-
-        // For unit testing
-        internal int? GetSlot(ServiceDescriptor serviceDescriptor)
-        {
-            if (_descriptorLookup.TryGetValue(serviceDescriptor.ServiceType, out var item))
-            {
-                return item.GetSlot(serviceDescriptor);
-            }
-
-            return null;
         }
 
         internal ServiceCallSite GetCallSite(Type serviceType, CallSiteChain callSiteChain)
@@ -407,11 +390,7 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
             return null;
         }
 
-        private ServiceCallSite CreateConstructorCallSite(
-            ResultCache lifetime,
-            Type serviceType,
-            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type implementationType,
-            CallSiteChain callSiteChain)
+        private ServiceCallSite CreateConstructorCallSite(ResultCache lifetime, Type serviceType, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] Type implementationType, CallSiteChain callSiteChain)
         {
             try
             {
@@ -433,23 +412,18 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
                         return new ConstructorCallSite(lifetime, serviceType, constructor);
                     }
 
-                    parameterCallSites = CreateArgumentCallSites(
-                        implementationType,
-                        callSiteChain,
-                        parameters,
-                        throwIfCallSiteNotFound: true)!;
+                    parameterCallSites = CreateArgumentCallSites(implementationType, callSiteChain, parameters, throwIfCallSiteNotFound: true);
 
                     return new ConstructorCallSite(lifetime, serviceType, constructor, parameterCallSites);
                 }
 
-                Array.Sort(constructors,
-                    (a, b) => b.GetParameters().Length.CompareTo(a.GetParameters().Length));
+                Array.Sort(constructors, (a, b) => b.GetParameters().Length.CompareTo(a.GetParameters().Length));
 
                 ConstructorInfo bestConstructor = null;
                 HashSet<Type> bestConstructorParameterTypes = null;
-                for (var i = 0; i < constructors.Length; i++)
+                foreach (var constructor in constructors)
                 {
-                    var parameters = constructors[i].GetParameters();
+                    var parameters = constructor.GetParameters();
 
                     var currentParameterCallSites = CreateArgumentCallSites(
                         implementationType,
@@ -461,7 +435,7 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
                     {
                         if (bestConstructor == null)
                         {
-                            bestConstructor = constructors[i];
+                            bestConstructor = constructor;
                             parameterCallSites = currentParameterCallSites;
                         }
                         else
@@ -483,11 +457,7 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
                                 if (!bestConstructorParameterTypes.Contains(p.ParameterType))
                                 {
                                     // Ambiguous match exception
-                                    throw new InvalidOperationException(string.Join(
-                                        Environment.NewLine,
-                                        StringResources.Format("AmbiguousConstructorException", implementationType),
-                                        bestConstructor,
-                                        constructors[i]));
+                                    throw new InvalidOperationException(string.Join(Environment.NewLine, StringResources.Format("AmbiguousConstructorException", implementationType), bestConstructor, constructor));
                                 }
                             }
                         }
@@ -511,11 +481,7 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
         }
 
         /// <returns>Not <b>null</b> if <b>throwIfCallSiteNotFound</b> is true</returns>
-        private ServiceCallSite[] CreateArgumentCallSites(
-            Type implementationType,
-            CallSiteChain callSiteChain,
-            ParameterInfo[] parameters,
-            bool throwIfCallSiteNotFound)
+        private ServiceCallSite[] CreateArgumentCallSites(Type implementationType, CallSiteChain callSiteChain, ParameterInfo[] parameters, bool throwIfCallSiteNotFound)
         {
             var parameterCallSites = new ServiceCallSite[parameters.Length];
             for (var index = 0; index < parameters.Length; index++)

@@ -14,14 +14,8 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
         }
 
         public abstract Type ServiceType { get; }
-        public abstract Type ImplementationType { get; }
         public abstract CallSiteKind Kind { get; }
         public ResultCache Cache { get; }
         public object Value { get; set; }
-
-        public bool CaptureDisposable =>
-            ImplementationType == null ||
-            typeof(IDisposable).IsAssignableFrom(ImplementationType) ||
-            typeof(IAsyncDisposable).IsAssignableFrom(ImplementationType);
     }
 }
