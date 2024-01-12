@@ -1,50 +1,50 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
+namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup;
+
+internal sealed class CallSiteRuntimeResolver : CallSiteVisitor<RuntimeResolverContext, object>
 {
-    internal sealed class CallSiteRuntimeResolver : CallSiteVisitor<RuntimeResolverContext, object>
+    public static CallSiteRuntimeResolver Instance { get; } = new();
+
+    private CallSiteRuntimeResolver()
     {
-        public static CallSiteRuntimeResolver Instance { get; } = new();
+    }
 
-        private CallSiteRuntimeResolver()
+    public object Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+    {
+        // Fast path to avoid virtual calls if we already have the cached value in the root scope
+        if (scope.IsRootScope && callSite.Value is { } cached)
         {
+            return cached;
         }
 
-        public object Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+        return VisitCallSite(callSite, new RuntimeResolverContext
         {
-            // Fast path to avoid virtual calls if we already have the cached value in the root scope
-            if (scope.IsRootScope && callSite.Value is { } cached)
-            {
-                return cached;
-            }
+            Scope = scope
+        });
+    }
 
-            return VisitCallSite(callSite, new RuntimeResolverContext
-            {
-                Scope = scope
-            });
+    protected override object VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+    {
+        return context.Scope.CaptureDisposable(VisitCallSiteMain(transientCallSite, context));
+    }
+
+    protected override object VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+    {
+        object[] parameterValues;
+        if (constructorCallSite.ParameterCallSites.Length == 0)
+        {
+            parameterValues = Array.Empty<object>();
         }
-
-        protected override object VisitDisposeCache(ServiceCallSite transientCallSite, RuntimeResolverContext context)
+        else
         {
-            return context.Scope.CaptureDisposable(VisitCallSiteMain(transientCallSite, context));
+            parameterValues = new object[constructorCallSite.ParameterCallSites.Length];
+            for (var index = 0; index < parameterValues.Length; index++)
+            {
+                parameterValues[index] = VisitCallSite(constructorCallSite.ParameterCallSites[index], context);
+            }
         }
-
-        protected override object VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
-        {
-            object[] parameterValues;
-            if (constructorCallSite.ParameterCallSites.Length == 0)
-            {
-                parameterValues = Array.Empty<object>();
-            }
-            else
-            {
-                parameterValues = new object[constructorCallSite.ParameterCallSites.Length];
-                for (var index = 0; index < parameterValues.Length; index++)
-                {
-                    parameterValues[index] = VisitCallSite(constructorCallSite.ParameterCallSites[index], context);
-                }
-            }
 
 #if NETFRAMEWORK || NETSTANDARD2_0
             try
@@ -58,131 +58,116 @@ namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
                 throw;
             }
 #else
-            return constructorCallSite.ConstructorInfo.Invoke(BindingFlags.DoNotWrapExceptions, binder: null, parameters: parameterValues, culture: null);
+        return constructorCallSite.ConstructorInfo.Invoke(BindingFlags.DoNotWrapExceptions, binder: null, parameters: parameterValues, culture: null);
 #endif
+    }
+
+    protected override object VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+    {
+        if (callSite.Value is { } value)
+        {
+            // Value already calculated, return it directly
+            return value;
         }
 
-        protected override object VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+        var lockType = RuntimeResolverLock.Root;
+        var serviceProviderEngine = context.Scope.RootProvider.Root;
+
+        lock (callSite)
         {
-            if (callSite.Value is { } value)
+            // Lock the callsite and check if another thread already cached the value
+            if (callSite.Value is { } callSiteValue)
             {
-                // Value already calculated, return it directly
-                return value;
+                return callSiteValue;
             }
 
-            var lockType = RuntimeResolverLock.Root;
-            var serviceProviderEngine = context.Scope.RootProvider.Root;
-
-            lock (callSite)
+            var resolved = VisitCallSiteMain(callSite, new RuntimeResolverContext
             {
-                // Lock the callsite and check if another thread already cached the value
-                if (callSite.Value is { } callSiteValue)
-                {
-                    return callSiteValue;
-                }
-
-                var resolved = VisitCallSiteMain(callSite, new RuntimeResolverContext
-                {
-                    Scope = serviceProviderEngine,
-                    AcquiredLocks = context.AcquiredLocks | lockType
-                });
-                serviceProviderEngine.CaptureDisposable(resolved);
-                callSite.Value = resolved;
-                return resolved;
-            }
-        }
-
-        protected override object VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
-        {
-            // Check if we are in the situation where scoped service was promoted to singleton
-            // and we need to lock the root
-            return context.Scope.IsRootScope ?
-                VisitRootCache(callSite, context) :
-                VisitCache(callSite, context, context.Scope, RuntimeResolverLock.Scope);
-        }
-
-        private object VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
-        {
-            var lockTaken = false;
-            var sync = serviceProviderEngine.Sync;
-            var resolvedServices = serviceProviderEngine.ResolvedServices;
-            // Taking locks only once allows us to fork resolution process
-            // on another thread without causing the deadlock because we
-            // always know that we are going to wait the other thread to finish before
-            // releasing the lock
-            if ((context.AcquiredLocks & lockType) == 0)
-            {
-                Monitor.Enter(sync, ref lockTaken);
-            }
-
-            try
-            {
-                // Note: This method has already taken lock by the caller for resolution and access synchronization.
-                // For scoped: takes a dictionary as both a resolution lock and a dictionary access lock.
-                if (resolvedServices.TryGetValue(callSite.Cache.Key, out var resolved))
-                {
-                    return resolved;
-                }
-
-                resolved = VisitCallSiteMain(callSite, new RuntimeResolverContext
-                {
-                    Scope = serviceProviderEngine,
-                    AcquiredLocks = context.AcquiredLocks | lockType
-                });
-                serviceProviderEngine.CaptureDisposable(resolved);
-                resolvedServices.Add(callSite.Cache.Key, resolved);
-                return resolved;
-            }
-            finally
-            {
-                if (lockTaken)
-                {
-                    Monitor.Exit(sync);
-                }
-            }
-        }
-
-        protected override object VisitConstant(ConstantCallSite constantCallSite, RuntimeResolverContext context)
-        {
-            return constantCallSite.DefaultValue;
-        }
-
-        protected override object VisitServiceProvider(ServiceProviderCallSite serviceProviderCallSite, RuntimeResolverContext context)
-        {
-            return context.Scope;
-        }
-
-        protected override object VisitIEnumerable(EnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
-        {
-            var array = Array.CreateInstance(
-                enumerableCallSite.ItemType,
-                enumerableCallSite.ServiceCallSites.Length);
-
-            for (var index = 0; index < enumerableCallSite.ServiceCallSites.Length; index++)
-            {
-                var value = VisitCallSite(enumerableCallSite.ServiceCallSites[index], context);
-                array.SetValue(value, index);
-            }
-            return array;
-        }
-
-        protected override object VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)
-        {
-            return factoryCallSite.Factory(context.Scope);
+                Scope = serviceProviderEngine,
+                AcquiredLocks = context.AcquiredLocks | lockType
+            });
+            serviceProviderEngine.CaptureDisposable(resolved);
+            callSite.Value = resolved;
+            return resolved;
         }
     }
 
-    internal struct RuntimeResolverContext
+    protected override object VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
     {
-        public ServiceProviderEngineScope Scope { get; set; }
-
-        public RuntimeResolverLock AcquiredLocks { get; set; }
+        // Check if we are in the situation where scoped service was promoted to singleton
+        // and we need to lock the root
+        return context.Scope.IsRootScope ?
+            VisitRootCache(callSite, context) :
+            VisitCache(callSite, context, context.Scope, RuntimeResolverLock.Scope);
     }
 
-    [Flags]
-    internal enum RuntimeResolverLock
+    private object VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
     {
-        Scope = 1,
-        Root = 2
+        var lockTaken = false;
+        var sync = serviceProviderEngine.Sync;
+        var resolvedServices = serviceProviderEngine.ResolvedServices;
+        // Taking locks only once allows us to fork resolution process
+        // on another thread without causing the deadlock because we
+        // always know that we are going to wait the other thread to finish before
+        // releasing the lock
+        if ((context.AcquiredLocks & lockType) == 0)
+        {
+            Monitor.Enter(sync, ref lockTaken);
+        }
+
+        try
+        {
+            // Note: This method has already taken lock by the caller for resolution and access synchronization.
+            // For scoped: takes a dictionary as both a resolution lock and a dictionary access lock.
+            if (resolvedServices.TryGetValue(callSite.Cache.Key, out var resolved))
+            {
+                return resolved;
+            }
+
+            resolved = VisitCallSiteMain(callSite, new RuntimeResolverContext
+            {
+                Scope = serviceProviderEngine,
+                AcquiredLocks = context.AcquiredLocks | lockType
+            });
+            serviceProviderEngine.CaptureDisposable(resolved);
+            resolvedServices.Add(callSite.Cache.Key, resolved);
+            return resolved;
+        }
+        finally
+        {
+            if (lockTaken)
+            {
+                Monitor.Exit(sync);
+            }
+        }
+    }
+
+    protected override object VisitConstant(ConstantCallSite constantCallSite, RuntimeResolverContext context)
+    {
+        return constantCallSite.DefaultValue;
+    }
+
+    protected override object VisitServiceProvider(ServiceProviderCallSite serviceProviderCallSite, RuntimeResolverContext context)
+    {
+        return context.Scope;
+    }
+
+    protected override object VisitIEnumerable(EnumerableCallSite enumerableCallSite, RuntimeResolverContext context)
+    {
+        var array = Array.CreateInstance(
+            enumerableCallSite.ItemType,
+            enumerableCallSite.ServiceCallSites.Length);
+
+        for (var index = 0; index < enumerableCallSite.ServiceCallSites.Length; index++)
+        {
+            var value = VisitCallSite(enumerableCallSite.ServiceCallSites[index], context);
+            array.SetValue(value, index);
+        }
+        return array;
+    }
+
+    protected override object VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)
+    {
+        return factoryCallSite.Factory(context.Scope);
     }
 }

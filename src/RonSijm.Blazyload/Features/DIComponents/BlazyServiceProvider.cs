@@ -2,11 +2,6 @@
 
 namespace RonSijm.Blazyload.Features.DIComponents;
 
-public interface IBlazyInternalServiceProvider
-{
-    bool TryGetServiceFromOverride(Type serviceType, out object value);
-}
-
 public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvider
 {
     private readonly ServiceCollection _services = new();

@@ -1,10 +1,9 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup
+namespace RonSijm.Blazyload.MicrosoftServiceProvider.ServiceLookup;
+
+internal abstract class ServiceProviderEngine
 {
-    internal abstract class ServiceProviderEngine
-    {
-        public abstract Func<ServiceProviderEngineScope, object> RealizeService(ServiceCallSite callSite);
-    }
+    public abstract Func<ServiceProviderEngineScope, object> RealizeService(ServiceCallSite callSite);
 }
