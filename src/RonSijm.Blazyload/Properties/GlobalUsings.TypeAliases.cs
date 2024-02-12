@@ -1,3 +1,2 @@
-﻿// Type aliases in a different file, so that you can resharper ignore the file
-
-global using SettingsForAssembly = (RonSijm.Blazyload.Features.Options.Models.BlazyOptions Blazy, RonSijm.Blazyload.Features.Options.Models.BlazyAssemblyOptions assembly);
+// Type aliases in a different file, so that you can resharper ignore the file
+global using SettingsForAssembly = (Features.Options.Models.BlazyOptions Blazy, Features.Options.Models.BlazyAssemblyOptions assembly);

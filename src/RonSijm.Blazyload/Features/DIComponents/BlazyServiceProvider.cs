@@ -1,15 +1,12 @@
-﻿using ServiceProviderOptions = RonSijm.Blazyload.MicrosoftServiceProvider.ServiceProviderOptions;
+using ServiceProviderOptions = RonSijm.Blazyload.MicrosoftServiceProvider.ServiceProviderOptions;
 
 namespace RonSijm.Blazyload.Features.DIComponents;
-
 public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvider
 {
     private readonly ServiceCollection _services = new();
     private readonly Dictionary<Type, Func<IServiceProvider, object>> _typeOverwrites = new();
     private readonly List<(Func<Type, bool> Criteria, Func<Type, IServiceProvider, object> Factory)> _typeFunctionOverrides = new();
-
     private IServiceProvider _serviceProvider;
-
     public BlazyOptions Options { get; }
 
     public BlazyServiceProvider(IEnumerable<ServiceDescriptor> services, BlazyOptions options)
@@ -21,15 +18,13 @@ public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvi
         }
 
         _services.AddSingleton(typeof(BlazyServiceProvider), this);
-
         _typeOverwrites.Add(typeof(IServiceScopeFactory), provider => new BlazyServiceScopeFactory(provider));
-
         foreach (var factory in options.AdditionalFactories)
         {
             _typeFunctionOverrides.Add(factory);
         }
 
-        _serviceProvider =  new MicrosoftServiceProvider.MicrosoftServiceProvider(_services, ServiceProviderOptions.Default, this);
+        _serviceProvider = new MicrosoftServiceProvider.MicrosoftServiceProvider(_services, ServiceProviderOptions.Default, this);
     }
 
     public object GetService(Type serviceType)
@@ -45,7 +40,6 @@ public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvi
     public bool TryGetServiceFromOverride(Type serviceType, out object value)
     {
         var hasOverWrite = _typeOverwrites.TryGetValue(serviceType, out var objectFactory);
-
         if (hasOverWrite)
         {
             {
@@ -84,18 +78,14 @@ public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvi
         {
             var assemblyName = $"{assembly.GetName().Name}";
             var assemblyOptions = Options?.GetOptions(assemblyName);
-
             var expectedClassName = assemblyOptions?.ClassPath ?? $"{assemblyName}.Properties.BlazyBootstrap";
-
             var registration = assembly.CreateInstance(expectedClassName);
-
             if (registration == null)
             {
                 continue;
             }
 
             var services = await TryLoadServices(registration);
-
             // If we weren't able to get the services from the assembly, we continue
             if (services == null)
             {
@@ -116,7 +106,6 @@ public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvi
     {
         // We can't throw an exception, we can't be certain that all lazy loaded assemblies require bootstrapping.
         IEnumerable<ServiceDescriptor> services = null;
-
         // If the registration is interfaced, it's easiest to use that.
         if (registration is IBlazyBootstrap registrationAsInterface)
         {
@@ -131,7 +120,7 @@ public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvi
                 return null;
             }
 
-            if (registrationMethodInfo.Invoke(registration, Array.Empty<object>()) is Task<IEnumerable<ServiceDescriptor>> taskResult)
+            if (registrationMethodInfo.Invoke(registration, Array.Empty<object>())is Task<IEnumerable<ServiceDescriptor>> taskResult)
             {
                 services = await taskResult;
             }
@@ -139,7 +128,6 @@ public class BlazyServiceProvider : IServiceProvider, IBlazyInternalServiceProvi
 
         return services;
     }
-
 
     public void CreateServiceProvider()
     {
