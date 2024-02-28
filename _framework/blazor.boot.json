@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "RonSijm.Demo.Blazyload.Host",
   "resources": {
-    "hash": "sha256-1ZShefdQGYYg5ZyXQ2p4qhSWKg4Zo8mqZoKZjw43q0A=",
+    "hash": "sha256-orm22Vos5+v3X7Lkxai8b7BAKnnJjz7M8DGhnPCdUNI=",
     "jsModuleNative": {
       "dotnet.native.8.0.2.7uwzfeysgn.js": "sha256-MS1BleyZ6qEUIQ/AZGuKvvrDlI16truq1Zux4J7In2Y="
     },
@@ -9,7 +9,7 @@
       "dotnet.runtime.8.0.2.13z0dbizkm.js": "sha256-54KSaoOArNfygQbV+r4B5y3ys53v2tnvFIyZcZiUmi0="
     },
     "wasmNative": {
-      "dotnet.native.wasm": "sha256-A++LhdBI/3BIixXahpiAfa2YlD4K8BOirmXR9EUm2Eg="
+      "dotnet.native.wasm": "sha256-wSeT3espcgBd9+iLqXI9qxTivsGWftfzgLRdMUrnNrs="
     },
     "icu": {
       "icudt_CJK.dat": "sha256-SZLtQnRc0JkwqHab0VUVP7T3uBPSeYzxzDnpxPpUnHk=",
@@ -32,9 +32,9 @@
       "Microsoft.Extensions.Primitives.wasm": "sha256-Ms2HR5Gpug/0uRAzdk4SUNT76Ml3CjFv9Jo+dUIMGac=",
       "Microsoft.JSInterop.wasm": "sha256-1vXTFGB8f1xknhrY0hxfr04x1/JK+bA0IxTp2CBzmhY=",
       "Microsoft.JSInterop.WebAssembly.wasm": "sha256-2qBJkLnOCr4py2S0peps0cFo0z3Ew9OVwGYodtvAVkk=",
-      "RonSijm.Blazyload.Library.wasm": "sha256-JRmw31/qmX/nBI0wVzzpBK1VuBD4zIRo5i6UuvhH094=",
-      "RonSijm.Blazyload.wasm": "sha256-mzv4mxD1iao7MTofA9TRr/ef8R2URkVV68B8WcFpN6g=",
-      "RonSijm.Demo.Blazyload.Host.wasm": "sha256-XkGwiByE0K2qD3BwoLWf8NDvmidHwDvF5j1Vb9if7T4=",
+      "RonSijm.Blazyload.Library.wasm": "sha256-iraCmjr3MEXoQKkth+Ucz1BFcSX0/lutaU1NZwE+WXQ=",
+      "RonSijm.Blazyload.wasm": "sha256-i18KVtpdO8Go+YDzzKFfat0xqcE4AxAHAN1KOM6qC6Y=",
+      "RonSijm.Demo.Blazyload.Host.wasm": "sha256-HUOgeS6gh2Pfbrwk0OhPBZbQPFJg28sx4y5SvHYt3rY=",
       "System.Collections.Concurrent.wasm": "sha256-mNdkXgWpYPtlqFSL8cOGkpGny4plJ7n/iyU+3Xjso/g=",
       "System.Collections.wasm": "sha256-6vlP8abtPEh6FfemXSOkRMmU2b6t00EkbDFthS9EGPM=",
       "System.ComponentModel.wasm": "sha256-qwurUoDSjnjNxAivtUxZqGvkOgARzX9ETuhBPrMx5Xo=",
@@ -46,24 +46,24 @@
       "System.Net.Http.Json.wasm": "sha256-OokrkDWO1QqPoDdNYATXqmg/QjcZlvX4mFUl2nQsEus=",
       "System.Net.Http.wasm": "sha256-4vCO9DtpspE2WtjKuxiVpPTsBj8Y0m2/9OUYaiEuPqw=",
       "System.Net.Primitives.wasm": "sha256-vrxcafwRdBO97DDgX/hMZoKmutr7B8vL8NSYBIeBIvE=",
-      "System.Private.CoreLib.wasm": "sha256-/R5wN+q1w7DCwreTESZjQtIMV0J+B6EIJWLm7QmEgY8=",
+      "System.Private.CoreLib.wasm": "sha256-qZGsvKFdvUvt/wRXqhJQ/Rrw/z9CbyWGO5Gr3eXclH8=",
       "System.Private.Uri.wasm": "sha256-BYbnSTum3NXsPXLa/0a8OXSex5Ezw7D94myxxtwabK8=",
       "System.Runtime.InteropServices.JavaScript.wasm": "sha256-2fNHxcvnXYStlUf+e1IokgsFZFUyJVv1w3Tf2NEhDBQ=",
       "System.Runtime.Loader.wasm": "sha256-Wn6l5Kx6P9brtg0uHeAjX3p1TEUaObh14M6aOtdFgEk=",
-      "System.Runtime.wasm": "sha256-yH3FTD51H49Byz68/gvcnUf3iZ4BjYAmVVDjwZwgpmA=",
+      "System.Runtime.wasm": "sha256-oXRdbmY39xUt+kC9rLL9LB8Fc5suHoqJ3CqctSFyFo8=",
       "System.Text.Encodings.Web.wasm": "sha256-NnePSWCgIId8nOPCgziTKhDyG6uCBs+3W6fazrWLoUA=",
       "System.Text.Json.wasm": "sha256-q50D0zI8o2/S9I4AOvt7AfOW5lKOmCmTuKwC9/cbqHI=",
       "System.Text.RegularExpressions.wasm": "sha256-g37JZZGWS6LK/Dhde0aHkzXKMxE/xwZwC2Ci4rgcwFc=",
       "System.Threading.wasm": "sha256-ExcURYyPn8mZ+IHhKw5Q02l+we0kCYT9z6SiVl85asg="
     },
     "lazyAssembly": {
-      "RonSijm.Demo.Blazyload.WeatherLib1.wasm": "sha256-Tg/VNx/FZXYWUa/MmQLwHf6Zlr/XGGXspBiTdWy8o6Q=",
-      "RonSijm.Demo.Blazyload.WeatherLib2.wasm": "sha256-+/rhVdQBwrXegnebf8ZCGVsB8l6vRjJ1zkamh8VxNg8=",
-      "RonSijm.Demo.Blazyload.WeatherLib3.wasm": "sha256-fxT6dd+C/+mve7e5P41YjsQtNoZqTcwzyKURj2GKG/I=",
-      "RonSijm.Demo.Blazyload.WeatherLib4.Component.wasm": "sha256-OdQag3kKcyE8TsIPEUYGsai/GHnDE+XfHmSqwUVpNM0=",
-      "RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm": "sha256-ipmqy53g8srFIIq2XD2TkeGjD8wxS+vIlRIZcmJUuzI=",
-      "RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.wasm": "sha256-MmDCRuHYC7JHcgVCItB78Dye5kWCDm8m+KvF70PhXeM=",
-      "RonSijm.Demo.Blazyload.WeatherLibOptionalNull.wasm": "sha256-3NiHi7PoN9/ad7o5pwlJf1mW2lqnBDQ2Wl/dJ2Bb78o="
+      "RonSijm.Demo.Blazyload.WeatherLib1.wasm": "sha256-dVszCHCZDbbtLgWwJbshEgj5uszAiKj4mOA9xj9pWos=",
+      "RonSijm.Demo.Blazyload.WeatherLib2.wasm": "sha256-gnnclpj9GxgWA1LWcUHyk0PxKWhX5geFcxA/onLJcEc=",
+      "RonSijm.Demo.Blazyload.WeatherLib3.wasm": "sha256-4pVv6fih/VTCOpIopvQarTdiqx+feP1x/ObuWrm3kdQ=",
+      "RonSijm.Demo.Blazyload.WeatherLib4.Component.wasm": "sha256-BzLmFZznUMl0N2UrdX61KW8+djdCVpfI/JjdQmAUDaY=",
+      "RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm": "sha256-bRNzHyGwEM3dgISYotRPBAvNo2fE8sodEGSsFOyNUFY=",
+      "RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.wasm": "sha256-bl/suQkD/QWkISdVdg993y7VOOxVWUaOKRmsx5jVB1A=",
+      "RonSijm.Demo.Blazyload.WeatherLibOptionalNull.wasm": "sha256-gHOfFfJzU+2SOIpHFBJf4+lSADSn2xqOzt7+SwKKOgQ="
     }
   },
   "cacheBootResources": true,
