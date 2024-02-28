@@ -1,0 +1,9 @@
+<Project>
+  	<PropertyGroup>
+        <LangVersion>preview</LangVersion>
+		<TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Authors>Ron Sijm</Authors>
+		<Company>Ron Sijm</Company>
+	</PropertyGroup>
+</Project>

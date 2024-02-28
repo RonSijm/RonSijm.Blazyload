@@ -27,7 +27,7 @@ public class AWSAuthComponent : ComponentBase
         if (Model != null)
         {
             AWSAuthHandler.SetCredentials(Model.BucketUrl, Model.AccessKey, Model.SecretKey);
-            await BlazyAssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib3.dll");
+            await BlazyAssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib3.wasm");
             ButtonColor = "btn-success";
         }
     }

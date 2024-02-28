@@ -1,18 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
+	<Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
+	<Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
+	<Import Project="..\..\BuildSettings\NuGetVersioning.props" />
+
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-		<LangVersion>preview</LangVersion>
-		<VersionPrefix>1.1.3</VersionPrefix>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>RonSijm.Blazyload</Title>
-		<Authors>Ron Sijm</Authors>
-		<Company>Ron Sijm</Company>
 		<Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
 		<PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
 		<Configurations>Debug;Release</Configurations>
-
 		<PackageIcon>packaging\blazyload-package-logo.png</PackageIcon>
 		<PackageReadmeFile>packaging\README.md</PackageReadmeFile>
 	</PropertyGroup>
@@ -22,15 +19,11 @@
 		<None Include="..\..\README.md" Pack="true" PackagePath="packaging" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.*" />
+	<ItemGroup Condition="'$(Configuration)' == 'debug'">
+		<ProjectReference Include="..\RonSijm.Blazyload.Library\RonSijm.Blazyload.Library.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.*" />
-	</ItemGroup>
-
-	<ItemGroup>
+	<ItemGroup Condition="'$(Configuration)' != 'debug'">
 		<PackageReference Include="RonSijm.Blazyload.Library" Version="1.*" />
 	</ItemGroup>
 

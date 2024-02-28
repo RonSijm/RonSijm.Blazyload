@@ -71,7 +71,7 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
                 }
 
                 var referenceAssemblies = assembly.GetReferencedAssemblies();
-                var assemblyNames = referenceAssemblies.Select(referenceAssembly => $"{referenceAssembly.Name}.dll");
+                var assemblyNames = referenceAssemblies.Select(referenceAssembly => $"{referenceAssembly.Name}.wasm");
 
                 // "Oh no! recursion! ಠ_ಠ" - Possibly implement trampoline pattern if this causes issues
                 var cascadeResults = await LoadAssembliesAsync(assemblyNames, true);

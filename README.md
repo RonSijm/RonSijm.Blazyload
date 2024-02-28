@@ -40,8 +40,8 @@ Here is a picture to better explain the purpose:
 
 <img width="1069" alt="lazy-loading" src="https://user-images.githubusercontent.com/337928/225349617-8d64deff-58e5-4ac3-a65b-cd45841b27d1.png">
 
-In this example you have the main project, `"Host"` - which has a router which lazy-loads the `Weatherlib.dll` project, when the `/fetchdata/` page is visited.  
-However, the FetchData requires a dependency `IWeatherResolver` that's also in the same `Weatherlib.dll` project. With default Blazor this will throw an exception, and it's not possible to lazy-load classes from dependencies
+In this example you have the main project, `"Host"` - which has a router which lazy-loads the `Weatherlib.wasm` project, when the `/fetchdata/` page is visited.  
+However, the FetchData requires a dependency `IWeatherResolver` that's also in the same `Weatherlib.wasm` project. With default Blazor this will throw an exception, and it's not possible to lazy-load classes from dependencies
 
 This article by Peter Himschoot describes the same problem that this library is trying to solve:
 https://blogs.u2u.be/peter/post/blazor-lazy-loading-and-dependency-injection
@@ -181,8 +181,8 @@ Here is a picture to demonstrate an example:
   
 <img width="1182" alt="lazy-cascaded" src="https://user-images.githubusercontent.com/337928/225361023-3f516d65-75e2-42f1-9dc6-b51336edb762.png">
 
-In this example you have the main project `"Host"` - has a router which lazy-loads the `Weatherlib.Page.dll` project, when the /fetchdata/ page is visited.  
-The fetchData page requires a `IWeatherResolver`, which in turn is in the `WeatherLib4.Component.dll`  
+In this example you have the main project `"Host"` - has a router which lazy-loads the `Weatherlib.Page.wasm` project, when the /fetchdata/ page is visited.  
+The fetchData page requires a `IWeatherResolver`, which in turn is in the `WeatherLib4.Component.wasm`  
 
 With default Blazor this setup would not be possible. 
 
@@ -218,7 +218,7 @@ builder.ConfigureContainer(new BlazyServiceProviderFactory(x =>
         {
             if (args.Path == "fetchdata1")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib1.dll" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib1.wasm" });
                 _lazyLoadedAssemblies.AddRange(assemblies);
             }
         }
@@ -260,7 +260,7 @@ Then you don't need the ` _lazyLoadedAssemblies.AddRange(assemblies);` line anym
   - [ ] Figure how to have something like an <OptionalComponent> so that we can load components based on whether or not a dll is loaded
   - [ ] Possibly make a Roslyn Analyzer that compile time checks if your config is remotely correct
   - [ ] Add a LazyLoad background qeueue, because there's no point to wait until a user clicks something, and then start loading dlls. If the app is somewhat idle, we can load dlls in the background
-  - [ ] Option to load the .dll.gz version, or to HEAD call to see what exists, and load the .dll.gz version if available. Either though options or something. HEAD call might give more overhead than just yolo calling dlls
+  - [ ] Option to load the .wasm.gz version, or to HEAD call to see what exists, and load the .wasm.gz version if available. Either though options or something. HEAD call might give more overhead than just yolo calling dlls
 
  ## TODOS before V1.x+:
   
@@ -281,3 +281,7 @@ Start a discussion to ask if the feature fits and if it's "up for grabs". If so 
 
  ## Contact and questions:
 I've created a Discord, though now it's just me, lol.. https://discord.gg/cDC6VkUn2X - but you can ask stuff here
+
+## Breaking changes in dotnet8 (By Blazor):  
+Instead of referencing your libraries as .dll, they now have a .wasm extension.
+See: https://github.com/dotnet/runtime/issues/92965#issuecomment-1746340200

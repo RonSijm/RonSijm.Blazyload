@@ -1,15 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.*" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
 	</ItemGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(Configuration)' == 'debug'">
+		<ProjectReference Include="..\..\..\src\RonSijm.Blazyload.Library\RonSijm.Blazyload.Library.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' != 'debug'">
 		<PackageReference Include="RonSijm.Blazyload.Library" Version="1.*" />
 	</ItemGroup>
 

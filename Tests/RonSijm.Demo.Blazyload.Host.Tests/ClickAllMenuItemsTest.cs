@@ -1,10 +1,17 @@
 using System.Linq;
 using System.Threading.Tasks;
+
+using Bunit;
+
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
+
 using RonSijm.Blazyload.Features.DIComponents;
 using RonSijm.Blazyload.Features.Options.Models;
 using RonSijm.Demo.Blazyload.Host.Client;
+
+using Xunit;
 
 namespace RonSijm.Demo.Blazyload.Host.Tests;
 
@@ -21,7 +28,7 @@ public class ClickAllMenuItemsTest : TestContext
         var options = new BlazyOptions();
         Program.BlazyConfig(options);
 
-        var serviceProviderFactory = new BlazyServiceProviderFactory(options, Services);
+        var serviceProviderFactory = new BlazyServiceProviderFactory(options);
         var serviceBuilder = serviceProviderFactory.CreateBuilder(Services);
         var serviceProvider = serviceProviderFactory.CreateServiceProvider(serviceBuilder);
 

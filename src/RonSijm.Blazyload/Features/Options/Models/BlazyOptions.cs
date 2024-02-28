@@ -18,9 +18,9 @@ public class BlazyOptions
             return null;
         }
 
-        if (assemblyName.EndsWith(".dll", StringComparison.Ordinal))
+        if (assemblyName.EndsWith(".wasm", StringComparison.Ordinal))
         {
-            assemblyName = assemblyName.Replace(".dll", string.Empty);
+            assemblyName = assemblyName.Replace(".wasm", string.Empty);
         }
 
         foreach (var mapping in _assemblyMapping)

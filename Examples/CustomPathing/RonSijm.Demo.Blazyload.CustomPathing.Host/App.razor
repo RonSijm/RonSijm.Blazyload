@@ -35,20 +35,20 @@
         {
             if (args.Path == "fetchdata1")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib1.dll" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib1.wasm" });
                 _lazyLoadedAssemblies.AddRange(assemblies);
             }
             else if (args.Path == "fetchdata2")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib2.dll" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib2.wasm" });
             }
             else if (args.Path == "fetchdata3")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib3.dll" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib3.wasm" });
             }
             else if (args.Path == "fetchdata4")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm" });
             }
         }
         catch (Exception)

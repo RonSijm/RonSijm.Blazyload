@@ -1,24 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="3.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*" PrivateAssets="all" />
   </ItemGroup>
 
 <!--Between here and the bottom-->
 
   <ItemGroup>
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib1.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib2.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib3.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Component.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib1.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib2.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib3.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Component.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,7 +39,12 @@
 <!-- You'd have to leave out both the ProjectReference and the BlazorWebAssemblyLazyLoad though, otherwise the project is non-lazy-loaded -->
 <!-- So leaving in all the project references is easiest. -->
 
-<!-- Post build event to move files from framework -->
+<!-- Pre build event to remove _framework folder -->
+<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\&quot;" />
+</Target>
+
+	<!-- Post build event to move files from framework -->
 <Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot;" />
 	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib1*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot;" />

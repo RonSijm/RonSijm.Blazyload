@@ -4,7 +4,7 @@ public class DummyAuthHandler
 {
     public bool HandleAuth(string assembly, HttpRequestMessage httpMessage, BlazyAssemblyOptions assemblyOptions)
     {
-        if (assembly == "RonSijm.Demo.Blazyload.WeatherLib2.dll")
+        if (assembly == "RonSijm.Demo.Blazyload.WeatherLib2.wasm")
         {
             httpMessage.Headers.Add("authorization", "Bearer eyJhb-mock-auth-header");
             if (httpMessage.RequestUri != null)

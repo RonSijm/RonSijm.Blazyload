@@ -1,23 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.5" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib1.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib2.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib3.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Page.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Component.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.dll" />
-    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLibOptionalNull.dll" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib1.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib2.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib3.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib4.Component.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLibOptionalNull.wasm" />
   </ItemGroup>
 
   <ItemGroup>
