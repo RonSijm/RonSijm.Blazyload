@@ -11,7 +11,7 @@ public class BlazyServiceProviderFactory : IServiceProviderFactory<BlazyBuilder>
 
     public BlazyBuilder CreateBuilder(IServiceCollection services)
     {
-        services.AddSingleton<BlazyAssemblyLoader>();
+        services.AddSingleton<IAssemblyLoader, BlazyAssemblyLoader>();
         var container = new BlazyBuilder(services);
         return container;
     }

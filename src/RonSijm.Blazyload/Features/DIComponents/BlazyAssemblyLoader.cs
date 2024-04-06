@@ -1,13 +1,14 @@
 ﻿// ReSharper disable global EventNeverSubscribedTo.Global - Justification: Used by library consumers
 // ReSharper disable global UnusedMember.Global - Justification: Used by library consumers
 
+using System.Diagnostics;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 using RonSijm.Blazyload.Features.DIComponents.Models;
 
 namespace RonSijm.Blazyload.Features.DIComponents;
 
-public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, NavigationManager navigationManager)
+public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, NavigationManager navigationManager) : IAssemblyLoader
 {
     private HashSet<string> _loadedAssemblies = new();
 
@@ -73,7 +74,6 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
                 var referenceAssemblies = assembly.GetReferencedAssemblies();
                 var assemblyNames = referenceAssemblies.Select(referenceAssembly => $"{referenceAssembly.Name}.wasm");
 
-                // "Oh no! recursion! ಠ_ಠ" - Possibly implement trampoline pattern if this causes issues
                 var cascadeResults = await LoadAssembliesAsync(assemblyNames, true);
             }
         }
@@ -131,45 +131,62 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
 
         using var client = new HttpClient();
 
-        foreach (var assemblyToLoad in assembliesToLoad)
+        foreach (var (assemblyToLoad, options) in assembliesToLoad)
         {
-            var dllLocation = GetDllLocationFromOptions(assemblyToLoad);
+            var loadedAssemblyBytes = await LoadFileAssembly(assemblyToLoad, options, client);
 
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{dllLocation}{assemblyToLoad.assemblyToLoad}");
+            Stream loadedSymbols = null;
 
-            if (assemblyToLoad.options is { HttpHandler: { } })
+            if (Debugger.IsAttached)
             {
-                var isSuccess = assemblyToLoad.options.HttpHandler.Invoke(assemblyToLoad.assemblyToLoad, request, assemblyToLoad.options);
-
-                if (!isSuccess)
-                {
-                    // HttpHandler indicated we can't process this
-                    continue;
-                }
+                // Dotnet6+7 use a DLL, Dotnet8 changed it to .wasm
+                var symbolsToLoad = assemblyToLoad.Replace(".wasm", ".pdb").Replace(".dll", ".pdb");
+                loadedSymbols = await LoadFileAssembly(symbolsToLoad, options, client);
             }
 
-            var response = await client.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
-            // TODO: We could add an option to do enable sha- validation
-
-            var contentBytes = await response.Content.ReadAsStreamAsync();
-            var assembly = AssemblyLoadContext.Default.LoadFromStream(contentBytes);
-
-            loadedAssemblies.Add(assembly);
+            if (loadedAssemblyBytes != null)
+            {
+                var assembly = AssemblyLoadContext.Default.LoadFromStream(loadedAssemblyBytes, loadedSymbols);
+                loadedAssemblies.Add(assembly);
+            }
         }
 
         return loadedAssemblies.ToArray();
     }
 
-    private string GetDllLocationFromOptions((string assemblyToLoad, BlazyAssemblyOptions options) assemblyToLoad)
+    private async Task<Stream> LoadFileAssembly(string assemblyToLoad, BlazyAssemblyOptions options, HttpClient client)
     {
-        var options = assemblyToLoad.options;
+        var dllLocation = GetDllLocationFromOptions(options);
 
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{dllLocation}{assemblyToLoad}");
+
+        if (options is { HttpHandler: { } })
+        {
+            var isSuccess = options.HttpHandler.Invoke(assemblyToLoad, request, options);
+
+            if (!isSuccess)
+            {
+                // HttpHandler indicated we can't process this
+                return null;
+            }
+        }
+
+        var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        // TODO: We could add an option to do enable sha- validation
+
+        var contentBytes = await response.Content.ReadAsStreamAsync();
+
+        return contentBytes;
+    }
+
+    private string GetDllLocationFromOptions(BlazyAssemblyOptions options)
+    {
         var dllLocation = options == null ? // If options is null,
             $"{navigationManager.BaseUri}/_framework/" : // use default path
             options.AbsolutePath ?? // If AbsolutePath isn't null, use that.
-            (options.RelativePath != null ? $"{navigationManager.BaseUri}{assemblyToLoad.options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
+            (options.RelativePath != null ? $"{navigationManager.BaseUri}{options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
                 $"{navigationManager.BaseUri}/_framework/"); // Else just use default path
 
         return dllLocation;

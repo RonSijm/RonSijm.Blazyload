@@ -1,5 +1,4 @@
 ﻿@page "/fetchdata3"
-@inject IWeatherResolver WeatherResolver
 
 <h1>Weather forecast</h1>
 
@@ -32,13 +31,4 @@ else
             }
         </tbody>
     </table>
-}
-
-@code {
-    private WeatherForecast[] _forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _forecasts = await WeatherResolver.GetWeather();
-    }
 }

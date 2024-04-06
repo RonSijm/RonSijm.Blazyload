@@ -6,7 +6,6 @@
 	<Import Project="..\..\BuildSettings\NuGetVersioning.props" />
 
 	<PropertyGroup>
-		<ImplicitUsings>enable</ImplicitUsings>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Title>RonSijm.Blazyload.Library</Title>
 		<Description>The client components of RonSijm.Blazyload</Description>
