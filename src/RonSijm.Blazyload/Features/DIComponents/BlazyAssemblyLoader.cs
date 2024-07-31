@@ -35,6 +35,7 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
         _preloadedDlls ??= await GetPreloadedAssemblies();
 
         var assembliesToLoadAsList = assembliesToLoad as List<string> ?? assembliesToLoad.ToList();
+
         var unattemptedAssemblies = assembliesToLoadAsList
             .Where(x => !_loadedAssemblies.Contains(x))
             .Where(x => !_preloadedDlls.Contains(x)).ToList();
@@ -136,12 +137,19 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
             var loadedAssemblyBytes = await LoadFileAssembly(assemblyToLoad, options, client);
 
             Stream loadedSymbols = null;
+            // Dotnet6+7 use a DLL, Dotnet8 changed it to .wasm
+            var symbolsToLoad = assemblyToLoad.Replace(".wasm", ".pdb").Replace(".dll", ".pdb");
 
-            if (Debugger.IsAttached)
+            try
             {
-                // Dotnet6+7 use a DLL, Dotnet8 changed it to .wasm
-                var symbolsToLoad = assemblyToLoad.Replace(".wasm", ".pdb").Replace(".dll", ".pdb");
-                loadedSymbols = await LoadFileAssembly(symbolsToLoad, options, client);
+                if (Debugger.IsAttached && !options.DisablePDBLoading)
+                {
+                    loadedSymbols = await LoadFileAssembly(symbolsToLoad, options, client);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Could not load symbols for '{symbolsToLoad}'");
             }
 
             if (loadedAssemblyBytes != null)
@@ -184,11 +192,16 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
     private string GetDllLocationFromOptions(BlazyAssemblyOptions options)
     {
         var dllLocation = options == null ? // If options is null,
-            $"{navigationManager.BaseUri}/_framework/" : // use default path
+            $"{GetBaseUrl()}/_framework/" : // use default path
             options.AbsolutePath ?? // If AbsolutePath isn't null, use that.
-            (options.RelativePath != null ? $"{navigationManager.BaseUri}{options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
-                $"{navigationManager.BaseUri}/_framework/"); // Else just use default path
+            (options.RelativePath != null ? $"{GetBaseUrl()}{options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
+                $"{GetBaseUrl()}/_framework/"); // Else just use default path
 
         return dllLocation;
+    }
+
+    private string GetBaseUrl()
+    {
+        return navigationManager.BaseUri.EndsWith("/") ? navigationManager.BaseUri[..^1] : navigationManager.BaseUri;
     }
 }
