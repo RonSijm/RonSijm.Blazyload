@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
-using RonSijm.Blazyload.Features.DIComponents;
+using RonSijm.Blazyload;
 using RonSijm.Demo.Blazyload.CustomPathing.Host.Auth;
 using RonSijm.Demo.Blazyload.CustomPathing.Host.Models;
 

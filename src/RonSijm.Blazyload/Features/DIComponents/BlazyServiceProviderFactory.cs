@@ -1,24 +1,20 @@
-﻿namespace RonSijm.Blazyload.Features.DIComponents;
+﻿using RonSijm.Syringe;
 
-public class BlazyServiceProviderFactory : IServiceProviderFactory<BlazyBuilder>
+namespace RonSijm.Blazyload;
+
+public class BlazyServiceProviderFactory(BlazyloadProviderOptions options) : IServiceProviderFactory<SyringeServiceProviderBuilder>
 {
-    private readonly BlazyOptions _options;
-
-    public BlazyServiceProviderFactory(BlazyOptions options)
-    {
-        _options = options;
-    }
-
-    public BlazyBuilder CreateBuilder(IServiceCollection services)
+    public SyringeServiceProviderBuilder CreateBuilder(IServiceCollection services)
     {
         services.AddSingleton<IAssemblyLoader, BlazyAssemblyLoader>();
-        var container = new BlazyBuilder(services);
+        services.AddSingleton(options.AssemblyLoadConfiguration);
+        var container = new SyringeServiceProviderBuilder(services);
         return container;
     }
 
-    public IServiceProvider CreateServiceProvider(BlazyBuilder blazyBuilder)
+    public IServiceProvider CreateServiceProvider(SyringeServiceProviderBuilder builderOptions)
     {
-        var serviceProvider = blazyBuilder.GetServiceProvider(_options);
+        var serviceProvider = builderOptions.GetServiceProvider(options);
 
         return serviceProvider;
     }

@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
+  <Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
+  <Import Project="..\..\BuildSettings\NuGetVersioning.props" />
+  <Import Project="..\..\BuildSettings\IncludeSyringeLib.props" />
+  <Import Project="..\..\BuildSettings\IncludeSyringe.props" />
+
+  <PropertyGroup>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
+    <Title>RonSijm.Blazyload.Fluxor</Title>
+    <Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
+    <PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
+    <Configurations>Debug;Release</Configurations>
+    <PackageIcon>packaging\blazyload-package-logo.png</PackageIcon>
+    <PackageReadmeFile>packaging\README.md</PackageReadmeFile>
+    <RootNamespace>RonSijm.Blazyload</RootNamespace>
+    <PackageOutputPath>..\..\packages</PackageOutputPath>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\packaging\blazyload-package-logo.png" Pack="true" PackagePath="packaging" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="packaging" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'debug'">
+    <PackageReference Include="RonSijm.Syringe.Fluxor" Version="1.0.0-Alpha1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'debug'">
+    <ProjectReference Include="..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe.Fluxor\RonSijm.Syringe.Fluxor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
+  </ItemGroup>
+
+</Project>

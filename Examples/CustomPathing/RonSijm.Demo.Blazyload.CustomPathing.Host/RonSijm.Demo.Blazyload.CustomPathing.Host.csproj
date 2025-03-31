@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*" PrivateAssets="all" />
   </ItemGroup>
 
-<!--Between here and the bottom-->
+  <!--Between here and the bottom-->
 
   <ItemGroup>
     <BlazorWebAssemblyLazyLoad Include="RonSijm.Demo.Blazyload.WeatherLib1.wasm" />
@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe\RonSijm.Syringe.csproj" />
     <ProjectReference Include="..\..\..\src\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
 
     <ProjectReference Include="..\..\RonSijm.Demo.Blazyload.WeatherLib1\RonSijm.Demo.Blazyload.WeatherLib1.csproj" />
@@ -33,35 +34,35 @@
 
   </ItemGroup>
 
-<!--Between here and the top-->
-<!-- You can technically leave all of this out of your project. -->
-<!-- Since the projects are dynamically loaded without care about whether you actually marked an assembly as "BlazorWebAssemblyLazyLoad". -->
-<!-- You'd have to leave out both the ProjectReference and the BlazorWebAssemblyLazyLoad though, otherwise the project is non-lazy-loaded -->
-<!-- So leaving in all the project references is easiest. -->
+  <!--Between here and the top-->
+  <!-- You can technically leave all of this out of your project. -->
+  <!-- Since the projects are dynamically loaded without care about whether you actually marked an assembly as "BlazorWebAssemblyLazyLoad". -->
+  <!-- You'd have to leave out both the ProjectReference and the BlazorWebAssemblyLazyLoad though, otherwise the project is non-lazy-loaded -->
+  <!-- So leaving in all the project references is easiest. -->
 
-<!-- Pre build event to remove _framework folder -->
-<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\&quot;" />
-</Target>
+  <!-- Pre build event to remove _framework folder -->
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\&quot; || exit 0" />
+  </Target>
 
-	<!-- Post build event to move files from framework -->
-<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot;" />
-	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib1*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot;" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; || exit 0 &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; || exit 0" />
+    <Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib1*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; || exit 0" />
 
-	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot;" />
-	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib2*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot;" />
+    <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot; || exit 0 &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot; || exit 0" />
+    <Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib2*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot; || exit 0" />
 
-	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot;" />
-	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib3*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot;" />
+    <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot; || exit 0 &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot; || exit 0" />
+    <Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib3*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot; || exit 0" />
 
-	<Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot; &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot;" />
-	<Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib4*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot;" />
-</Target>
+    <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot; || exit 0 &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot; || exit 0" />
+    <Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib4*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot; || exit 0" />
+  </Target>
 
-<PropertyGroup>
-	<ExcludeFoldersFromDeployment>_framework</ExcludeFoldersFromDeployment>
-	<ExcludeFoldersFromDeployment>$(ExcludeFoldersFromDeployment)</ExcludeFoldersFromDeployment>
-</PropertyGroup>
+  <PropertyGroup>
+    <ExcludeFoldersFromDeployment>_framework</ExcludeFoldersFromDeployment>
+    <ExcludeFoldersFromDeployment>$(ExcludeFoldersFromDeployment)</ExcludeFoldersFromDeployment>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
 
 </Project>

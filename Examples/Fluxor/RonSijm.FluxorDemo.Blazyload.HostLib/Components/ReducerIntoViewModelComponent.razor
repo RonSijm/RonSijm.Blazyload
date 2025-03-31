@@ -1,0 +1,14 @@
+﻿@inherits ViewModelComponent<RonSijm.FluxorDemo.Blazyload.HostLib.Redux.MainProjectReduceIntoCounterState>
+
+@if (ViewModel == null)
+{
+    <p role="status">Current count: Null</p>
+}
+else if (ViewModel.CounterState == null)
+{
+    <p role="status">Current count: Inner state null</p>
+}
+else
+{
+    <p role="status">Current count: @ViewModel.CounterState.Count</p>
+}

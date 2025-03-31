@@ -250,25 +250,28 @@ Then you don't need the ` _lazyLoadedAssemblies.AddRange(assemblies);` line anym
   
  This is a video of the example projects in use. To try them yourself you can clone or fork this repo and run `RonSijm.Demo.Blazyload.Host`
  
- ## TODOS before V1.1.1+:
+ ## TODOS Diagnostics:
 
   - [ ] Expose some of the internal load stats of Blazyload, so you can inspect what happened at runtime
   - [ ] Figure out why bUnit won't use `AddFallbackServiceProvider`
 
- ## TODOS before V1.2+:
+ ## TODOS Features:
 
-  - [ ] Figure how to have something like an <OptionalComponent> so that we can load components based on whether or not a dll is loaded
   - [ ] Possibly make a Roslyn Analyzer that compile time checks if your config is remotely correct
   - [ ] Add a LazyLoad background qeueue, because there's no point to wait until a user clicks something, and then start loading dlls. If the app is somewhat idle, we can load dlls in the background
-  - [ ] Option to load the .wasm.gz version, or to HEAD call to see what exists, and load the .wasm.gz version if available. Either though options or something. HEAD call might give more overhead than just yolo calling dlls
 
- ## TODOS before V1.x+:
+ ## TODOS Compatibility:
   
   - [ ] See how well this could work with other low level packages,
     - [ ] For example [Fluxor.Blazor.Web](https://www.nuget.org/packages/Fluxor.Blazor.Web) - and see whether it's possible to inject new state object trees into it after its initialized
 
- # Removed Features:
- - [ ] (Lazy) loading PDBs for debugging purposes. Microsoft claims you can use PDBs to debug lazy loaded dlls, but I haven't ever seen it work. Just normal debugging is already a hassle in Blazor, so I haven't bothered porting loading PDBs for debug purposes, because on my machine it doesn't work anyways
+## Changelog:
+
+ - Blazyload - 1.2:
+   - Added Support for Dotnet8
+ 
+ - Blazyload - 1.3:
+   - Loading PDB Symbols while a debugger is attached. So now you should hit breakpoints of lazy-loaded files.
 
 
  ## Contributing:

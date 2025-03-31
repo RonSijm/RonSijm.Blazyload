@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using RonSijm.Blazyload.Library.Features.Consumer;
+using RonSijm.Syringe;
 
 namespace RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.Properties;
 
 // ReSharper disable once UnusedType.Global
-public class BlazyBootstrap : IBlazyBootstrap
+public class BlazyBootstrap : IBootstrapper
 {
     public Task<IEnumerable<ServiceDescriptor>> Bootstrap()
     {

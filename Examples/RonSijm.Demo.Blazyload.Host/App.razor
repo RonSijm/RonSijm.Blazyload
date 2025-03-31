@@ -1,6 +1,6 @@
-﻿@inject IAssemblyLoader BlazyAssemblyLoader;
+﻿@inject IAssemblyLoader AssemblyLoader;
 
-<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync" AdditionalAssemblies="@_lazyLoadedAssemblies">
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync" AdditionalAssemblies="@AssemblyLoader.LoadedAssemblies">
 
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />

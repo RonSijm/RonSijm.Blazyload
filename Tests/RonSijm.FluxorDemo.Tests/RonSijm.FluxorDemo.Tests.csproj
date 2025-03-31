@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+    <PackageReference Include="FluentAssertions" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Examples\Fluxor\RonSijm.FluxorDemo.Blazyload.HostLib\RonSijm.FluxorDemo.Blazyload.HostLib.csproj" />
+    <ProjectReference Include="..\..\Examples\Fluxor\RonSijm.FluxorDemo.Blazyload.WeatherLib1\RonSijm.FluxorDemo.Blazyload.WeatherLib1.csproj" />
+    <ProjectReference Include="..\..\Examples\Fluxor\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.csproj" />
+    <ProjectReference Include="..\..\Examples\Fluxor\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page.csproj" />
+    <ProjectReference Include="..\..\src\RonSijm.Blazyload.Hosting\RonSijm.Blazyload.Hosting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,28 @@
+﻿@page "/fetchdata1"
+
+@using System.Diagnostics
+@using Fluxor
+@using Microsoft.AspNetCore.Components.Web
+@using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+
+<PageTitle>Fetch Data 1</PageTitle>
+
+<br />
+<p>A counter where everything is in 1 lazy loaded project</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click</button>
+
+@code
+{
+    private void IncrementCount()
+    {
+        Console.WriteLine("IncrementCount");
+        Debug.WriteLine("IncrementCount");
+        Dispatcher.Dispatch(new IncreaseWeatherLib1CounterAction());
+    }
+}
+<CounterComponent />

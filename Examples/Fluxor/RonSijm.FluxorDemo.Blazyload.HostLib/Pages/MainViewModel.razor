@@ -1,0 +1,21 @@
+﻿@page "/MainReduceIntoViewModel"
+@using RonSijm.FluxorDemo.Blazyload.HostLib.Redux
+@inherits ViewModelComponent<MainProjectReduceIntoCounterState>
+
+<PageTitle>Index</PageTitle>
+
+<br />
+<p>A counter that's been loaded on the index page</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private void IncrementCount()
+    {
+        var count = ViewModel?.CounterState?.Count + 1 ?? 1;
+        Dispatcher.Dispatch(new MainProjectCounterState { Count = count });
+    }
+}
+<ReducerIntoViewModelComponent />

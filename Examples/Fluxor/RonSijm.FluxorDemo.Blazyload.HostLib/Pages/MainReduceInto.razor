@@ -1,0 +1,26 @@
+﻿@page "/MainReduceInto"
+
+@using Fluxor
+@using RonSijm.FluxorDemo.Blazyload.HostLib.Redux
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject IState<MainProjectReduceIntoCounterState> CounterState
+
+<PageTitle>Index</PageTitle>
+
+<br />
+<p>A counter state that uses a 'ReduceInto' attribute</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private void IncrementCount()
+    {
+        var count = CounterState.Value?.CounterState?.Count + 1 ?? 1;
+        Dispatcher.Dispatch(new MainProjectCounterState { Count = count });
+    }
+}
+<ReducerIntoCounterComponent />

@@ -1,30 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-	<Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
-	<Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
-	<Import Project="..\..\BuildSettings\NuGetVersioning.props" />
+  <Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
+  <Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
+  <Import Project="..\..\BuildSettings\NuGetVersioning.props" />
+  <Import Project="..\..\BuildSettings\IncludeSyringe.props" />
+  <Import Project="..\..\BuildSettings\IncludeSyringeLib.props" />
 
-	<PropertyGroup>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-		<Title>RonSijm.Blazyload</Title>
-		<Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
-		<PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
-		<Configurations>Debug;Release</Configurations>
-		<PackageIcon>packaging\blazyload-package-logo.png</PackageIcon>
-		<PackageReadmeFile>packaging\README.md</PackageReadmeFile>
-	</PropertyGroup>
+  <PropertyGroup>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
+    <Title>RonSijm.Blazyload</Title>
+    <Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
+    <PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
+    <Configurations>Debug;Release</Configurations>
+    <PackageIcon>packaging\blazyload-package-logo.png</PackageIcon>
+    <PackageReadmeFile>packaging\README.md</PackageReadmeFile>
+    <PackageOutputPath>..\..\packages</PackageOutputPath>
+    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\..\packaging\blazyload-package-logo.png" Pack="true" PackagePath="packaging" />
-		<None Include="..\..\README.md" Pack="true" PackagePath="packaging" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(Configuration)' == 'debug'">
-		<ProjectReference Include="..\RonSijm.Blazyload.Library\RonSijm.Blazyload.Library.csproj" />
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(Configuration)' != 'debug'">
-		<PackageReference Include="RonSijm.Blazyload.Library" Version="1.*" />
-	</ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packaging\blazyload-package-logo.png" Pack="true" PackagePath="packaging" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="packaging" />
+  </ItemGroup>
 
 </Project>

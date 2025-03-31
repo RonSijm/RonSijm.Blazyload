@@ -1,0 +1,9 @@
+<Project>
+  <ItemGroup Condition="'$(Configuration)' != 'debug'">
+    <PackageReference Include="RonSijm.Syringe" Version="1.0.0-Alpha1" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(Configuration)' == 'debug'">
+    <ProjectReference Include="$(SolutionDir)..\RonSijm.Syringe\src\Main\RonSijm.Syringe\RonSijm.Syringe.csproj" />
+  </ItemGroup>
+</Project>

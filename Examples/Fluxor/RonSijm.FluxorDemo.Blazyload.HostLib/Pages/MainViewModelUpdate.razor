@@ -1,0 +1,38 @@
+﻿@page "/MainViewModelUpdate"
+
+@using Fluxor
+@using RonSijm.FluxorDemo.Blazyload.HostLib.Redux
+@inherits ViewModelComponent<MainProjectReduceIntoCounterState>
+
+@inject IState<MainProjectReduceIntoCounterState> CounterState
+
+<PageTitle>Index</PageTitle>
+
+<br />
+<p>A counter that's been loaded on the index page</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private void IncrementCount()
+    {
+        var count = CounterState.Value?.CounterState?.Count + 1 ?? 1;
+        Dispatcher.Update<MainProjectCounterState>(state => state.Count = count);
+    }
+}
+@* <ReducerIntoViewModelComponent /> *@
+
+@if (ViewModel == null)
+{
+    <p role="status">Current count: Null</p>
+}
+else if (ViewModel.CounterState == null)
+{
+    <p role="status">Current count: Inner state null</p>
+}
+else
+{
+    <p role="status">Current count: @ViewModel.CounterState.Count</p>
+}

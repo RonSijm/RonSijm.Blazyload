@@ -1,24 +1,28 @@
 ﻿// ReSharper disable global EventNeverSubscribedTo.Global - Justification: Used by library consumers
 // ReSharper disable global UnusedMember.Global - Justification: Used by library consumers
 
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Routing;
+using RonSijm.Blazyload.Loading;
+using RonSijm.Syringe;
 using System.Diagnostics;
 using System.Net.Http.Json;
-using Microsoft.AspNetCore.Components;
-using RonSijm.Blazyload.Features.DIComponents.Models;
 
-namespace RonSijm.Blazyload.Features.DIComponents;
+namespace RonSijm.Blazyload;
 
-public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, NavigationManager navigationManager) : IAssemblyLoader
+public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, NavigationManager navigationManager) : IAssemblyLoader
 {
-    private HashSet<string> _loadedAssemblies = new();
+    private HashSet<string> _loadedAssemblyHashes = [];
+    private HashSet<string> _preloadedAssemblies;
 
-    private HashSet<string> _preloadedDlls;
+    public SyringeServiceProvider ServiceProvider { get; } = serviceProvider;
 
     public event Action<List<Assembly>> OnAssembliesLoaded;
+    public event Action<List<ServiceDescriptor>> OnDescriptorsLoaded;
 
     public async Task<List<Assembly>> LoadAssemblyAsync(string assemblyToLoad)
     {
-        return await LoadAssembliesAsync(new[] { assemblyToLoad }, false);
+        return await LoadAssembliesAsync([assemblyToLoad], false);
     }
 
     public async Task<List<Assembly>> LoadAssembliesAsync(IEnumerable<string> assembliesToLoad)
@@ -26,28 +30,51 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
         return await LoadAssembliesAsync(assembliesToLoad, false);
     }
 
+    public List<Assembly> LoadedAssemblies { get; } = new();
+
+    [Inject]
+    public AssemblyLoadConfiguration AssemblyLoadConfiguration { get; set; }
+
+    public async Task HandleNavigation(NavigationContext args)
+    {
+        try
+        {
+            var assembly = AssemblyLoadConfiguration.GetAssembly(args.Path);
+            if (assembly != null)
+            {
+                await LoadAssemblyAsync(assembly);
+            }
+        }
+        catch (Exception)
+        {
+            // Do Nothing
+        }
+    }
+
     /// <summary>
     /// Method that actually begins loading the assemblies.
     /// Method is private because I don't want outsiders to call this with isRecursive = true, as it will mess things up.
     /// </summary>
-    private async Task<List<Assembly>> LoadAssembliesAsync(IEnumerable<string> assembliesToLoad, bool isRecursive)
+    private async Task<List<Assembly>> LoadAssembliesAsync(IEnumerable<string> assembliesToLoad, bool isRecursive, List<ServiceDescriptor> loadedDescriptors = null)
     {
-        _preloadedDlls ??= await GetPreloadedAssemblies();
+        _preloadedAssemblies ??= await GetPreloadedAssemblies();
+        loadedDescriptors ??= new List<ServiceDescriptor>();
 
         var assembliesToLoadAsList = assembliesToLoad as List<string> ?? assembliesToLoad.ToList();
-
         var unattemptedAssemblies = assembliesToLoadAsList
-            .Where(x => !_loadedAssemblies.Contains(x))
-            .Where(x => !_preloadedDlls.Contains(x)).ToList();
+            .Where(x => !_loadedAssemblyHashes.Contains(x))
+            .Where(x => !_preloadedAssemblies.Contains(x)).ToList();
 
         var loadedAssemblies = new List<Assembly>();
 
         try
         {
-            var assemblyWithOptions = new List<(string assemblyToLoad, BlazyAssemblyOptions options)>();
+            var assemblyWithOptions = new List<(string assemblyToLoad, AssemblyOptions options)>();
+            var blazyOptions = ServiceProvider.Options.GetOptions<AssemblyLoadOptions>();
+
             foreach (var assemblyToLoad in unattemptedAssemblies)
             {
-                var options = blazyServiceProvider.Options.GetOptions(assemblyToLoad);
+                var options = blazyOptions?.GetOptions(assemblyToLoad);
                 assemblyWithOptions.Add((assemblyToLoad, options));
             }
 
@@ -60,14 +87,18 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
 
             loadedAssemblies.AddRange(assemblies);
 
-            await blazyServiceProvider.Register(assemblies);
+            var optionsModel = ServiceProvider.Options.GetOptions<AssemblyLoadOptions>();
+            var serviceDescriptors = LibraryLoader.GetServiceDescriptorsOfAssemblies(optionsModel, assemblies);
+
+            var loadedServiceDescriptors = await ServiceProvider.LoadServiceDescriptors(serviceDescriptors);
+            loadedDescriptors.AddRange(loadedServiceDescriptors);
 
             foreach (var assembly in assemblies)
             {
                 var assemblyName = $"{assembly.GetName().Name}";
-                var assemblyOptions = blazyServiceProvider.Options?.GetOptions(assemblyName);
+                var assemblyOptions = optionsModel?.GetOptions(assemblyName);
 
-                if (BlazyOptions.DisableCascadeLoadingGlobally && assemblyOptions is { DisableCascadeLoading: true })
+                if (BlazyloadProviderOptions.DisableCascadeLoadingGlobally && assemblyOptions is { DisableCascadeLoading: true })
                 {
                     continue;
                 }
@@ -80,14 +111,14 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
         }
         catch (Exception e)
         {
-            if (!isRecursive || BlazyOptions.EnableLoggingForCascadeErrors)
+            if (!isRecursive || BlazyloadProviderOptions.EnableLoggingForCascadeErrors)
             {
 
                 Console.WriteLine(e);
             }
         }
 
-        _loadedAssemblies = _loadedAssemblies.Concat(unattemptedAssemblies).ToHashSet();
+        _loadedAssemblyHashes = _loadedAssemblyHashes.Concat(unattemptedAssemblies).ToHashSet();
 
         if (isRecursive)
         {
@@ -95,9 +126,11 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
         }
 
         // Only at the end of the recursive loop we rebuild the service provider, and call consumers
-        blazyServiceProvider.CreateServiceProvider();
+        ServiceProvider.Build();
         OnAssembliesLoaded?.Invoke(loadedAssemblies);
+        OnDescriptorsLoaded?.Invoke(loadedDescriptors);
 
+        LoadedAssemblies.AddRange(loadedAssemblies);
         return loadedAssemblies;
     }
 
@@ -126,7 +159,7 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
         return preloadedDlls;
     }
 
-    private async Task<Assembly[]> LoadAssembliesWithByOptions(List<(string assemblyToLoad, BlazyAssemblyOptions options)> assembliesToLoad)
+    private async Task<Assembly[]> LoadAssembliesWithByOptions(List<(string assemblyToLoad, AssemblyOptions options)> assembliesToLoad)
     {
         var loadedAssemblies = new List<Assembly>();
 
@@ -137,19 +170,12 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
             var loadedAssemblyBytes = await LoadFileAssembly(assemblyToLoad, options, client);
 
             Stream loadedSymbols = null;
-            // Dotnet6+7 use a DLL, Dotnet8 changed it to .wasm
-            var symbolsToLoad = assemblyToLoad.Replace(".wasm", ".pdb").Replace(".dll", ".pdb");
 
-            try
+            if (Debugger.IsAttached)
             {
-                if (Debugger.IsAttached && !options.DisablePDBLoading)
-                {
-                    loadedSymbols = await LoadFileAssembly(symbolsToLoad, options, client);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Could not load symbols for '{symbolsToLoad}'");
+                // Dotnet6+7 use a DLL, Dotnet8 changed it to .wasm
+                var symbolsToLoad = assemblyToLoad.Replace(".wasm", ".pdb").Replace(".dll", ".pdb");
+                loadedSymbols = await LoadFileAssembly(symbolsToLoad, options, client);
             }
 
             if (loadedAssemblyBytes != null)
@@ -162,7 +188,7 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
         return loadedAssemblies.ToArray();
     }
 
-    private async Task<Stream> LoadFileAssembly(string assemblyToLoad, BlazyAssemblyOptions options, HttpClient client)
+    private async Task<Stream> LoadFileAssembly(string assemblyToLoad, AssemblyOptions options, HttpClient client)
     {
         var dllLocation = GetDllLocationFromOptions(options);
 
@@ -189,19 +215,14 @@ public class BlazyAssemblyLoader(BlazyServiceProvider blazyServiceProvider, Navi
         return contentBytes;
     }
 
-    private string GetDllLocationFromOptions(BlazyAssemblyOptions options)
+    private string GetDllLocationFromOptions(AssemblyOptions options)
     {
         var dllLocation = options == null ? // If options is null,
-            $"{GetBaseUrl()}/_framework/" : // use default path
+            $"{navigationManager.BaseUri}/_framework/" : // use default path
             options.AbsolutePath ?? // If AbsolutePath isn't null, use that.
-            (options.RelativePath != null ? $"{GetBaseUrl()}{options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
-                $"{GetBaseUrl()}/_framework/"); // Else just use default path
+            (options.RelativePath != null ? $"{navigationManager.BaseUri}{options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
+                $"{navigationManager.BaseUri}/_framework/"); // Else just use default path
 
         return dllLocation;
-    }
-
-    private string GetBaseUrl()
-    {
-        return navigationManager.BaseUri.EndsWith("/") ? navigationManager.BaseUri[..^1] : navigationManager.BaseUri;
     }
 }

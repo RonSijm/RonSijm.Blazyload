@@ -9,8 +9,4 @@
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)' == 'debug'">
-		<ProjectReference Include="..\..\src\RonSijm.Blazyload.Library\RonSijm.Blazyload.Library.csproj" />
-	</ItemGroup>
-
 </Project>

@@ -1,0 +1,34 @@
+﻿@page "/MainEffect"
+
+@using RonSijm.FluxorDemo.Blazyload.HostLib.Redux
+@inherits ViewModelComponent<IncreaseMainProjectCounterThroughEffect_ParentState>
+
+<PageTitle>Index</PageTitle>
+
+<br />
+<p>A counter that's been updated though an effect</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private void IncrementCount()
+    {
+        var count = ViewModel?.CounterState?.Count + 1 ?? 1;
+        Dispatcher.Update<IncreaseMainProjectCounterThroughEffect_CounterState>(state => state.Count = count);
+    }
+}
+
+@if (ViewModel == null)
+{
+    <p role="status">Current count: Null</p>
+}
+else if (ViewModel.CounterState == null)
+{
+    <p role="status">Current count: Inner state null</p>
+}
+else
+{
+    <p role="status">Current count: @ViewModel.CounterState.Count</p>
+}

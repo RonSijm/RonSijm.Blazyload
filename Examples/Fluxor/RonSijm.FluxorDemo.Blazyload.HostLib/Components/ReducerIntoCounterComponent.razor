@@ -1,0 +1,18 @@
+﻿@using Fluxor
+@using RonSijm.FluxorDemo.Blazyload.HostLib.Redux
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IState<MainProjectReduceIntoCounterState> CounterState
+
+@if (CounterState.Value == null)
+{
+    <p role="status">Current count: Null</p>
+}
+else if (CounterState.Value.CounterState== null)
+{
+    <p role="status">Current count: Inner state null</p>
+}
+else
+{
+    <p role="status">Current count: @CounterState.Value.CounterState.Count</p>
+}

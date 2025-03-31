@@ -1,6 +1,7 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using RonSijm.Syringe;
 using RegionEndpoint = Amazon.RegionEndpoint;
 
 namespace RonSijm.Demo.Blazyload.CustomPathing.Host.Auth;
@@ -18,7 +19,7 @@ public class AWSAuthHandler
         _secretKey = secretKey;
     }
 
-    public bool HandleAuth(string assembly, HttpRequestMessage httpMessage, BlazyAssemblyOptions assemblyOptions)
+    public bool HandleAuth(string assembly, HttpRequestMessage httpMessage, AssemblyOptions assemblyOptions)
     {
         if (_accessKey == null || _secretKey == null)
         {

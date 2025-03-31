@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
+  <Import Project="..\..\BuildSettings\IncludeSyringeLib.props" />
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -8,10 +10,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
   </ItemGroup>
-	
-	<ItemGroup Condition="'$(Configuration)' == 'debug'">
-		<ProjectReference Include="..\..\src\RonSijm.Blazyload.Library\RonSijm.Blazyload.Library.csproj" />
-	</ItemGroup>
 
 	<ItemGroup Condition="'$(Configuration)' != 'debug'">
 		<PackageReference Include="RonSijm.Blazyload.Library" Version="1.*" />

@@ -1,0 +1,34 @@
+﻿@page "/"
+
+@using Fluxor
+@using RonSijm.FluxorDemo.Blazyload.HostLib.Redux
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject IState<MainProjectReducerMethodCounterState> CounterState
+
+<PageTitle>Index</PageTitle>
+
+<br />
+<p>A counter that's been loaded on the index page</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private void IncrementCount()
+    {
+        var count = CounterState.Value.Count + 1;
+        Dispatcher.Dispatch(new MainProjectReducerMethodCounterState { Count = count });
+    }
+
+    private void LoadAssemblies()
+    {
+        Dispatcher.Dispatch(new LoadAssembly("RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm"));
+    }
+}
+
+<ReducerMethodCounterComponent />
+
+<button class="btn btn-primary" @onclick="LoadAssemblies">Load Assemblies</button>

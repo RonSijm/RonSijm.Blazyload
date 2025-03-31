@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <UseSourceProjects Condition="'$(SolutionName)' != '$([System.String]::Copy($(SolutionName)).Replace(&quot;LocalDev&quot;, &quot;&quot;))'">true</UseSourceProjects>
+  </PropertyGroup>
+
+  <Target Name="PrintUseSourceProjects" BeforeTargets="BeforeBuild">
+    <Message Importance="High" Text="UseSourceProjects = $(UseSourceProjects)" />
+    <Message Importance="High" Text="Solution = $(SolutionName)" />
+  </Target>
+</Project>

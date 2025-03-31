@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page.wasm" />
+    <BlazorWebAssemblyLazyLoad Include="RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.wasm" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <ProjectReference Include="..\..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe.Fluxor\RonSijm.Syringe.Fluxor.csproj" />
+    <ProjectReference Include="..\..\..\src\RonSijm.Blazyload.Hosting\RonSijm.Blazyload.Hosting.csproj" />
+    <ProjectReference Include="..\..\..\src\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
+    <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.HostLib\RonSijm.FluxorDemo.Blazyload.HostLib.csproj" />
+    <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.WeatherLib1\RonSijm.FluxorDemo.Blazyload.WeatherLib1.csproj" />
+    <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page.csproj" />
+    <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseSourceProjects)' == 'true'">
+    <ProjectReference Include="..\..\..\..\..\Libraries\Fluxor\Source\Lib\Fluxor.Blazor.Web.ReduxDevTools\Fluxor.Blazor.Web.ReduxDevTools.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Libraries\Fluxor\Source\Lib\Fluxor.Blazor.Web\Fluxor.Blazor.Web.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Libraries\Fluxor\Source\Lib\Fluxor\Fluxor.csproj" />
+    <ProjectReference Include="..\..\..\..\RonSijm.FuxorExtensions\src\RonSijm.Fluxor.Blazor.Web.Extensions\RonSijm.Fluxor.Blazor.Web.Extensions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(UseSourceProjects)' != 'true'">
+    <PackageReference Include="Fluxor" Version="6.*" />
+    <PackageReference Include="Fluxor.Blazor.Web" Version="6.*" />
+    <PackageReference Include="Fluxor.Blazor.Web.ReduxDevTools" Version="6.*" />
+    <PackageReference Include="RonSijm.Fluxor.Blazor.Web.Extensions" Version="*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ElectronNET.API" Version="23.6.2" />
+  </ItemGroup>
+
+</Project>

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe\RonSijm.Syringe.csproj" />
     <ProjectReference Include="..\..\src\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
 
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib1\RonSijm.Demo.Blazyload.WeatherLib1.csproj" />

@@ -1,0 +1,18 @@
+﻿@using RonSijm.FluxorDemo.Blazyload.HostLib.Shared
+
+@inject IAssemblyLoader AssemblyLoader
+
+<Fluxor.Blazor.Web.StoreInitializer />
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@AssemblyLoader.HandleNavigation" AdditionalAssemblies="@AssemblyLoader.LoadedAssemblies">
+
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>

@@ -2,17 +2,10 @@
 
 namespace RonSijm.Demo.Blazyload.WeatherLib1;
 
-public class WeatherResolver : IWeatherResolver
+public class WeatherResolver(HttpClient client) : IWeatherResolver
 {
-    private readonly HttpClient _client;
-
-    public WeatherResolver(HttpClient client)
-    {
-        _client = client;
-    }
-
     public async Task<WeatherForecast[]> GetWeather()
     {
-        return await _client.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        return await client.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
     }
 }

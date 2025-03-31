@@ -1,10 +1,13 @@
+using RonSijm.Blazyload;
+using RonSijm.Syringe;
+
 namespace RonSijm.Demo.Blazyload.Host.Client;
 
 public class Program
 {
     // Note: You don't *need* to declare your options like this, you can do it inside main.
     // I'm doing it like this so that my config accessible to bUnit
-    public static Action<BlazyOptions> BlazyConfig { get; } = x =>
+    public static Action<BlazyloadProviderOptions> BlazyConfig { get; } = x =>
     {
         x.ResolveMode = ResolveMode.EnableOptional;
         x.UseSettingsForDll("RonSijm.Demo.Blazyload.WeatherLib3").UseCustomClass("RonSijm.Demo.Blazyload.WeatherLib3.CustomRegistrationClass").DisableCascadeLoading();

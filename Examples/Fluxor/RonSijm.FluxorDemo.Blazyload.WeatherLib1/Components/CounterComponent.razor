@@ -1,0 +1,7 @@
+﻿@using Fluxor
+@using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IState<WeatherLib1CounterState> CounterState
+
+<p role="status">Current count: @CounterState.Value.Count</p>

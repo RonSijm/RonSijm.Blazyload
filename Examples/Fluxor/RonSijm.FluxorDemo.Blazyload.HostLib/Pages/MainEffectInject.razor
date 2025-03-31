@@ -1,0 +1,28 @@
+﻿@page "/MainEffectInject"
+@using RonSijm.FluxorDemo.Blazyload.HostLib.Redux
+@inherits ViewModelComponent<IncreaseMainProjectCounterThroughEffectWithInjection>
+
+<PageTitle>Index</PageTitle>
+
+<br />
+<p>A counter that's been loaded on the index page</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private void IncrementCount()
+    {
+        Dispatcher.Dispatch(new IncreaseMainProjectCounterThroughEffectWithInjectionAction());
+    }
+}
+
+@if (ViewModel == null)
+{
+    <p role="status">Current count: Null</p>
+}
+else
+{
+    <p role="status">Current count: @ViewModel.Count</p>
+}

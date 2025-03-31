@@ -1,4 +1,3 @@
----
 name: .NET
 on:
   push:
@@ -10,31 +9,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.101
       - name: Restore dependencies
-        run: dotnet restore src
-      - name: Build Debug
-        run: dotnet build src --no-restore
-      - name: Test
-        run: dotnet test src --no-restore --collect:"XPlat Code Coverage"
-          --results-directory:coverage --
-          DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=lcov
-      - name: Codecov
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_KEY}}
-        uses: codecov/codecov-action@v2.0.3
-        with:
-          directory: ./coverage
-      - name: Build Blazyload
-        run: dotnet build src/RonSijm.Blazyload --configuration Release -o "./packages"
-      - name: Restore dependencies of Blazyload Library
-        run: dotnet restore src/RonSijm.Blazyload.Library
-      - name: Build Blazyload Library
-        run: dotnet build src/RonSijm.Blazyload.Library --configuration Release -o "./packages"
+        run: |
+          for proj in $(find . -name "*.csproj"); do
+            dotnet restore "$proj"
+          done
+      - name: Build Projects
+        run: |
+          for proj in $(find . -name "*.csproj"); do
+            dotnet build "$proj" --configuration Release -o "./packages"
+          done
       - name: Publish to NuGet
         env:
           NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
-        run: dotnet nuget push -s https://www.nuget.org/api/v2/package -k $NUGET_API_KEY --skip-duplicate
-          ./packages/*.nupkg
+        run: dotnet nuget push "./packages/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key $NUGET_API_KEY --skip-duplicate

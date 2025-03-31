@@ -1,0 +1,21 @@
+﻿@page "/MainStateFromInterface"
+@using RonSijm.FluxorDemo.Blazyload.HostLib.Redux
+@inherits ViewModelComponent<MainProjectCounterFromInterfaceState>
+
+<PageTitle>Index</PageTitle>
+
+<br />
+<p>A counter that's been loaded on the index page</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+
+    private void IncrementCount()
+    {
+        var count = ViewModel?.Count + 1 ?? 1;
+        Dispatcher.Update<MainProjectCounterFromInterfaceState>(x => x.Count = count);
+    }
+}
+<CounterFromInterfaceStateViewModelComponent />

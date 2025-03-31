@@ -4,10 +4,3 @@ global using System.Reflection;
 global using System.Runtime.Loader;
 
 global using Microsoft.Extensions.DependencyInjection;
-global using Microsoft.Extensions.DependencyInjection.Extensions;
-
-global using RonSijm.Blazyload.Features.DIComponents;
-global using RonSijm.Blazyload.Features.Options.Models;
-global using RonSijm.Blazyload.Library.Features.Consumer;
-global using RonSijm.Blazyload.Library.Features.Mode;
-

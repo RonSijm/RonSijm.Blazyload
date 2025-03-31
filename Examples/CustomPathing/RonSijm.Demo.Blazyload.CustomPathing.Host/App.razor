@@ -27,7 +27,7 @@
         base.OnInitialized();
     }
 
-    private readonly List<Assembly> _lazyLoadedAssemblies = new();
+    private readonly List<Assembly> _lazyLoadedAssemblies = [];
 
     private async Task OnNavigateAsync(NavigationContext args)
     {
@@ -35,20 +35,20 @@
         {
             if (args.Path == "fetchdata1")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib1.wasm" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(["RonSijm.Demo.Blazyload.WeatherLib1.wasm"]);
                 _lazyLoadedAssemblies.AddRange(assemblies);
             }
             else if (args.Path == "fetchdata2")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib2.wasm" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(["RonSijm.Demo.Blazyload.WeatherLib2.wasm"]);
             }
             else if (args.Path == "fetchdata3")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib3.wasm" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(["RonSijm.Demo.Blazyload.WeatherLib3.wasm"]);
             }
             else if (args.Path == "fetchdata4")
             {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(new[] { "RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm" });
+                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(["RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm"]);
             }
         }
         catch (Exception)
