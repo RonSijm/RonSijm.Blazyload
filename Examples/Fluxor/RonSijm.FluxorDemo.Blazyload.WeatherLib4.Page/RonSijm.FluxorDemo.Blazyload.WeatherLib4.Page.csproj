@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
+  <Import Project="..\..\..\BuildSettings\Include.Fluxor.props" />
+  <Import Project="..\..\..\BuildSettings\Include.Fluxor.Blazor.Web.props" />
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -11,16 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(UseSourceProjects)' == 'true'">
-    <ProjectReference Include="..\..\..\..\..\Libraries\Fluxor\Source\Lib\Fluxor.Blazor.Web\Fluxor.Blazor.Web.csproj" />
-    <ProjectReference Include="..\..\..\..\..\Libraries\Fluxor\Source\Lib\Fluxor\Fluxor.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(UseSourceProjects)' != 'true'">
-    <PackageReference Include="Fluxor" Version="6.*" />
-    <PackageReference Include="Fluxor.Blazor.Web" Version="6.*" />
   </ItemGroup>
 
 </Project>

@@ -8,6 +8,7 @@ public class BlazyServiceProviderFactory(BlazyloadProviderOptions options) : ISe
     {
         services.AddSingleton<IAssemblyLoader, BlazyAssemblyLoader>();
         services.AddSingleton(options.AssemblyLoadConfiguration);
+        services.AddSingleton(options.AssemblyLoaderOptions);
         var container = new SyringeServiceProviderBuilder(services);
         return container;
     }

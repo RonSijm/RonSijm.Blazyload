@@ -1,0 +1,3 @@
+cd..
+setx USE_BLAZYLOAD_FROM_SOURCE "false"
+setx BLAZYLOAD_PATH "%CD%"

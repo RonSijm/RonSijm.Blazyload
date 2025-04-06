@@ -1,0 +1,9 @@
+<Project> 
+  <ItemGroup Condition="'$(USE_SYRINGE_FROM_SOURCE)' != 'true'"> 
+    <PackageReference Include="RonSijm.Syringe" Version="[1.0.0-Alpha1.1,)" /> 
+  </ItemGroup> 
+ 
+  <ItemGroup Condition="'$(USE_SYRINGE_FROM_SOURCE)' == 'true'"> 
+    <ProjectReference Include="$(SYRINGE_PATH)\src\Main\RonSijm.Syringe\RonSijm.Syringe.csproj" /> 
+  </ItemGroup> 
+</Project> 

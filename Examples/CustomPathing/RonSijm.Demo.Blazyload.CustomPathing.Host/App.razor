@@ -16,17 +16,6 @@
 
 @code {
 
-    protected override void OnInitialized()
-    {
-        BlazyAssemblyLoader.OnAssembliesLoaded += list =>
-        {
-            _lazyLoadedAssemblies.AddRange(list);
-            StateHasChanged();
-        };
-
-        base.OnInitialized();
-    }
-
     private readonly List<Assembly> _lazyLoadedAssemblies = [];
 
     private async Task OnNavigateAsync(NavigationContext args)

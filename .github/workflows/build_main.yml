@@ -11,17 +11,13 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.101
+          dotnet-version: | 
+            8.x
+            9.x
       - name: Restore dependencies
-        run: |
-          for proj in $(find . -name "*.csproj"); do
-            dotnet restore "$proj"
-          done
+        run: dotnet restore RonSijm.Blazyload.sln
       - name: Build Projects
-        run: |
-          for proj in $(find . -name "*.csproj"); do
-            dotnet build "$proj" --configuration Release -o "./packages"
-          done
+        run: dotnet build RonSijm.Blazyload.sln --configuration Release
       - name: Publish to NuGet
         env:
           NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}

@@ -3,8 +3,9 @@
   <Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
   <Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
   <Import Project="..\..\BuildSettings\NuGetVersioning.props" />
-  <Import Project="..\..\BuildSettings\IncludeSyringeLib.props" />
-  <Import Project="..\..\BuildSettings\IncludeSyringe.props" />
+  <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.Lib.props" />
+  <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.Fluxor.props" />
+  <Import Project="..\..\BuildSettings\Include.Fluxor.props" />
 
   <PropertyGroup>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
@@ -22,14 +23,6 @@
   <ItemGroup>
     <None Include="..\..\packaging\blazyload-package-logo.png" Pack="true" PackagePath="packaging" />
     <None Include="..\..\README.md" Pack="true" PackagePath="packaging" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' != 'debug'">
-    <PackageReference Include="RonSijm.Syringe.Fluxor" Version="1.0.0-Alpha1" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' == 'debug'">
-    <ProjectReference Include="..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe.Fluxor\RonSijm.Syringe.Fluxor.csproj" />
   </ItemGroup>
 
   <ItemGroup>

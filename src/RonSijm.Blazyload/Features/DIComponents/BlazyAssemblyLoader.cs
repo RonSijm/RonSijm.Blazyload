@@ -10,15 +10,32 @@ using System.Net.Http.Json;
 
 namespace RonSijm.Blazyload;
 
-public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, NavigationManager navigationManager) : IAssemblyLoader
+public class BlazyAssemblyLoader : IAssemblyLoader
 {
     private HashSet<string> _loadedAssemblyHashes = [];
     private HashSet<string> _preloadedAssemblies;
 
-    public SyringeServiceProvider ServiceProvider { get; } = serviceProvider;
+    private readonly AssemblyLoaderOptions _options;
+    private readonly SyringeServiceProvider _serviceProvider;
+    private readonly string _baseUrl;
 
-    public event Action<List<Assembly>> OnAssembliesLoaded;
-    public event Action<List<ServiceDescriptor>> OnDescriptorsLoaded;
+    public BlazyAssemblyLoader(AssemblyLoaderOptions options, SyringeServiceProvider serviceProvider, NavigationManager navigationManager)
+    {
+        _options = options;
+        _serviceProvider = serviceProvider;
+        _baseUrl = navigationManager.BaseUri;
+        if (!_baseUrl.EndsWith('/'))
+        {
+            _baseUrl += '/';
+        }
+
+        foreach (var optionsAfterLoadAssembliesExtension in _options.AfterLoadAssembliesExtensions)
+        {
+            optionsAfterLoadAssembliesExtension.SetReference(serviceProvider);
+        }
+    }
+
+    //public SyringeServiceProvider ServiceProvider { get; } = serviceProvider;
 
     public async Task<List<Assembly>> LoadAssemblyAsync(string assemblyToLoad)
     {
@@ -70,7 +87,7 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
         try
         {
             var assemblyWithOptions = new List<(string assemblyToLoad, AssemblyOptions options)>();
-            var blazyOptions = ServiceProvider.Options.GetOptions<AssemblyLoadOptions>();
+            var blazyOptions = _serviceProvider.Options.GetOptions<AssemblyLoadOptions>();
 
             foreach (var assemblyToLoad in unattemptedAssemblies)
             {
@@ -87,10 +104,10 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
 
             loadedAssemblies.AddRange(assemblies);
 
-            var optionsModel = ServiceProvider.Options.GetOptions<AssemblyLoadOptions>();
+            var optionsModel = _serviceProvider.Options.GetOptions<AssemblyLoadOptions>();
             var serviceDescriptors = LibraryLoader.GetServiceDescriptorsOfAssemblies(optionsModel, assemblies);
 
-            var loadedServiceDescriptors = await ServiceProvider.LoadServiceDescriptors(serviceDescriptors);
+            var loadedServiceDescriptors = await _serviceProvider.LoadServiceDescriptors(serviceDescriptors);
             loadedDescriptors.AddRange(loadedServiceDescriptors);
 
             foreach (var assembly in assemblies)
@@ -98,7 +115,7 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
                 var assemblyName = $"{assembly.GetName().Name}";
                 var assemblyOptions = optionsModel?.GetOptions(assemblyName);
 
-                if (BlazyloadProviderOptions.DisableCascadeLoadingGlobally && assemblyOptions is { DisableCascadeLoading: true })
+                if (_options.DisableCascadeLoading || assemblyOptions is { DisableCascadeLoading: true })
                 {
                     continue;
                 }
@@ -111,9 +128,8 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
         }
         catch (Exception e)
         {
-            if (!isRecursive || BlazyloadProviderOptions.EnableLoggingForCascadeErrors)
+            if (!isRecursive || _options.EnableLoggingForCascadeErrors)
             {
-
                 Console.WriteLine(e);
             }
         }
@@ -126,9 +142,18 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
         }
 
         // Only at the end of the recursive loop we rebuild the service provider, and call consumers
-        ServiceProvider.Build();
-        OnAssembliesLoaded?.Invoke(loadedAssemblies);
-        OnDescriptorsLoaded?.Invoke(loadedDescriptors);
+        _serviceProvider.Build();
+
+        _options.AfterLoadAssembliesExtensions.ForEach(x => x.AssembliesLoaded(loadedAssemblies));
+        _options.AfterLoadAssembliesExtensions.ForEach(x => x.DescriptorsLoaded(loadedDescriptors));
+        
+        if (_options.EnableLogging)
+        {
+            foreach (var loadedAssembly in loadedAssemblies)
+            {
+                Console.WriteLine($"Loaded Assembly: {loadedAssembly.FullName}");
+            }
+        }
 
         LoadedAssemblies.AddRange(loadedAssemblies);
         return loadedAssemblies;
@@ -141,7 +166,7 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
         try
         {
             using var client = new HttpClient();
-            var result = await client.GetFromJsonAsync<BlazorBootModel>($"{navigationManager.BaseUri}/_framework/blazor.boot.json");
+            var result = await client.GetFromJsonAsync<BlazorBootModel>($"{_baseUrl}_framework/blazor.boot.json");
 
             foreach (var assembly in result.Resources.Assembly)
             {
@@ -152,8 +177,11 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
         }
         catch (Exception e)
         {
-            Console.WriteLine(@"Error while attempting discover preloaded dlls.");
-            Console.WriteLine(e);
+            if (_options.EnableLogging)
+            {
+                Console.WriteLine(@"Error while attempting discover preloaded dlls.");
+                Console.WriteLine(e);
+            }
         }
 
         return preloadedDlls;
@@ -165,17 +193,28 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
 
         using var client = new HttpClient();
 
-        foreach (var (assemblyToLoad, options) in assembliesToLoad)
+        foreach (var (assemblyToLoad, assemblyOptions) in assembliesToLoad)
         {
-            var loadedAssemblyBytes = await LoadFileAssembly(assemblyToLoad, options, client);
+            var loadedAssemblyBytes = await LoadFileAssembly(assemblyToLoad, assemblyOptions, client);
 
             Stream loadedSymbols = null;
 
             if (Debugger.IsAttached)
             {
-                // Dotnet6+7 use a DLL, Dotnet8 changed it to .wasm
-                var symbolsToLoad = assemblyToLoad.Replace(".wasm", ".pdb").Replace(".dll", ".pdb");
-                loadedSymbols = await LoadFileAssembly(symbolsToLoad, options, client);
+                try
+                {
+                    // Dotnet6+7 use a DLL, Dotnet8 changed it to .wasm
+                    var symbolsToLoad = assemblyToLoad.Replace(".wasm", ".pdb").Replace(".dll", ".pdb");
+                    loadedSymbols = await LoadFileAssembly(symbolsToLoad, assemblyOptions, client);
+                }
+                catch (Exception e)
+                {
+                    if (_options.EnableLogging)
+                    {
+                        Console.WriteLine($@"Error while trying to load pdb for assembly '{assemblyToLoad}'.");
+                        Console.WriteLine(e);
+                    }
+                }
             }
 
             if (loadedAssemblyBytes != null)
@@ -218,10 +257,10 @@ public class BlazyAssemblyLoader(SyringeServiceProvider serviceProvider, Navigat
     private string GetDllLocationFromOptions(AssemblyOptions options)
     {
         var dllLocation = options == null ? // If options is null,
-            $"{navigationManager.BaseUri}/_framework/" : // use default path
+            $"{_baseUrl}_framework/" : // use default path
             options.AbsolutePath ?? // If AbsolutePath isn't null, use that.
-            (options.RelativePath != null ? $"{navigationManager.BaseUri}{options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
-                $"{navigationManager.BaseUri}/_framework/"); // Else just use default path
+            (options.RelativePath != null ? $"{_baseUrl}{options.RelativePath}" : // If RelativePath isn't null, use base path + RelativePath
+                $"{_baseUrl}_framework/"); // Else just use default path
 
         return dllLocation;
     }

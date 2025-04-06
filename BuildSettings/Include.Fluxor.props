@@ -1,0 +1,9 @@
+<Project> 
+  <ItemGroup Condition="'$(USE_FLUXOR_FROM_SOURCE)' != 'true'"> 
+    <PackageReference Include="Fluxor" Version="[6.6.0,)" /> 
+  </ItemGroup> 
+ 
+  <ItemGroup Condition="'$(USE_FLUXOR_FROM_SOURCE)' == 'true'"> 
+    <ProjectReference Include="$(FLUXOR_PATH)\Source\Lib\Fluxor\Fluxor.csproj" /> 
+  </ItemGroup> 
+</Project> 

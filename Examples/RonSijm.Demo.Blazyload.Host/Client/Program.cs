@@ -9,7 +9,6 @@ public class Program
     // I'm doing it like this so that my config accessible to bUnit
     public static Action<BlazyloadProviderOptions> BlazyConfig { get; } = x =>
     {
-        x.ResolveMode = ResolveMode.EnableOptional;
         x.UseSettingsForDll("RonSijm.Demo.Blazyload.WeatherLib3").UseCustomClass("RonSijm.Demo.Blazyload.WeatherLib3.CustomRegistrationClass").DisableCascadeLoading();
     };
 

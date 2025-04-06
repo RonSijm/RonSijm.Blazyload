@@ -1,0 +1,9 @@
+<Project> 
+  <ItemGroup Condition="'$(USE_BLAZYLOAD_FROM_SOURCE)' != 'true'"> 
+    <PackageReference Include="RonSijm.Blazyload.Fluxor" Version="[2.0.0-alpha3,)" /> 
+  </ItemGroup> 
+ 
+  <ItemGroup Condition="'$(USE_BLAZYLOAD_FROM_SOURCE)' == 'true'"> 
+    <ProjectReference Include="$(BLAZYLOAD_PATH)\src\RonSijm.Blazyload.Fluxor\RonSijm.Blazyload.Fluxor.csproj" /> 
+  </ItemGroup> 
+</Project> 

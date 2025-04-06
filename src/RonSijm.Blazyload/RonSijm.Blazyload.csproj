@@ -3,8 +3,8 @@
   <Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
   <Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
   <Import Project="..\..\BuildSettings\NuGetVersioning.props" />
-  <Import Project="..\..\BuildSettings\IncludeSyringe.props" />
-  <Import Project="..\..\BuildSettings\IncludeSyringeLib.props" />
+  <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.props" />
+  <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.Lib.props" />
 
   <PropertyGroup>
     <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>

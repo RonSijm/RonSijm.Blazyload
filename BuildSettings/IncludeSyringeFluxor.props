@@ -1,9 +1,0 @@
-<Project>
-  <ItemGroup Condition="'$(Configuration)' != 'debug'">
-    <PackageReference Include="RonSijm.Syringe.Fluxor" Version="1.0.0-Alpha1" />
-  </ItemGroup>
-  
-  <ItemGroup Condition="'$(Configuration)' == 'debug'">
-    <ProjectReference Include="$(SolutionDir)..\RonSijm.Syringe\src\Main\RonSijm.Syringe.Fluxor\RonSijm.Syringe.Fluxor.csproj" />
-  </ItemGroup>
-</Project>

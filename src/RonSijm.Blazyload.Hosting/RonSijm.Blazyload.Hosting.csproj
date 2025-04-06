@@ -3,6 +3,7 @@
   <Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
   <Import Project="..\..\BuildSettings\NuGetVersioning.props" />
   <Import Project="..\..\BuildSettings\HostingAbstractionsForFramework.props" />
+  <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.props" />
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -30,14 +31,5 @@
   <ItemGroup>
     <ProjectReference Include="..\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
   </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' != 'debug'">
-    <PackageReference Include="RonSijm.Syringe" Version="1.0.0-Alpha1" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)' == 'debug'">
-    <ProjectReference Include="..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe\RonSijm.Syringe.csproj" />
-  </ItemGroup>
-
 
 </Project>
