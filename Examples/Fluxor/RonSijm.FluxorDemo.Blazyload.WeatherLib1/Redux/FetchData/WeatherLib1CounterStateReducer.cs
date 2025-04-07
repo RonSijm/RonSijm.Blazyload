@@ -1,8 +1,8 @@
 using Fluxor;
 
-namespace RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux;
+namespace RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux.FetchData;
 
-public class Reducers
+public class WeatherLib1CounterStateReducer
 {
     [ReducerMethod]
     public static WeatherLib1CounterState ReduceUpdateWeatherStateAction(WeatherLib1CounterState state, IncreaseWeatherLib1CounterAction action)

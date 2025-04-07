@@ -1,11 +1,11 @@
 using FluentAssertions;
 using RonSijm.FluxorDemo.Blazyload.HostLib.Redux;
-using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux;
+using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux.FetchData;
 using RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.Redux;
 using RonSijm.FluxorDemo.Tests.Helpers;
 using RonSijm.Syringe;
 
-namespace RonSijm.FluxorDemo.Tests;
+namespace RonSijm.FluxorDemo.Tests.Full;
 
 public class FullProjectIntegrationTestWithScopes
 {

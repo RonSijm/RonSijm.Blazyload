@@ -1,0 +1,26 @@
+﻿@page "/Lib1ReduceInto"
+
+@using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux.ReduceIntoCounterState1
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IDispatcher Dispatcher
+@inject IState<Lib1ReduceIntoCounterState> CounterState
+
+<PageTitle>Fetch Data 1</PageTitle>
+
+<br />
+<p>A counter where everything is in 1 lazy loaded project</p>
+<br />
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click</button>
+
+@code
+{
+    private void IncrementCount()
+    {
+        var count = CounterState.Value?.CounterState?.Count + 1 ?? 1;
+        Dispatcher.Dispatch(new Lib1CounterState { Count = count });
+    }
+}
+
+<Lib1ReducerIntoCounterComponent1 />

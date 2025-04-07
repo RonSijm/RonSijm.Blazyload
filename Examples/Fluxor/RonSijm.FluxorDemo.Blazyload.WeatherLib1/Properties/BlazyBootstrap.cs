@@ -1,6 +1,6 @@
-﻿using Fluxor;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using RonSijm.Syringe;
+using RonSijm.Syringe.DependencyInjection;
 
 namespace RonSijm.FluxorDemo.Blazyload.WeatherLib1.Properties;
 
@@ -9,12 +9,11 @@ public class BlazyBootstrap : IBootstrapper
 {
     public Task<IEnumerable<ServiceDescriptor>> Bootstrap()
     {
-        var serviceCollection = new ServiceCollection();
+        var serviceCollection = new SyringeServiceCollection();
 
-        serviceCollection.AddFluxor(options =>
+        serviceCollection.AddFluxorLibrary(options =>
         {
-            options.WithLifetime(StoreLifetime.Singleton);
-            options.ScanAssemblies(typeof(BlazyBootstrap).Assembly);
+            options.ScanAssemblies<BlazyBootstrap>();
         });
 
         return Task.FromResult<IEnumerable<ServiceDescriptor>>(serviceCollection);

@@ -3,7 +3,7 @@ using RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.Redux;
 using RonSijm.FluxorDemo.Tests.Helpers;
 using RonSijm.Syringe;
 
-namespace RonSijm.FluxorDemo.Tests;
+namespace RonSijm.FluxorDemo.Tests.Lib4;
 
 public class Lib4FetchDataTest
 {

@@ -1,6 +1,6 @@
 ﻿using Fluxor;
 
-namespace RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux;
+namespace RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux.FetchData;
 
 [FeatureState]
 public class WeatherLib1CounterState

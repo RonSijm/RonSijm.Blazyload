@@ -14,6 +14,10 @@ public static class DependencyInjectionService
         var optionsFactory = new Action<BlazyloadProviderOptions>(options =>
         {
             options.LoadOnNavigation("fetchdata1", "RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm");
+            options.LoadOnNavigation("Lib1ReduceInto", "RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm");
+            options.LoadOnNavigation("Lib1ReduceIntoMethod", "RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm");
+            options.LoadOnNavigation("Lib1ReduceIntoReducer", "RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm");
+
             options.LoadOnNavigation("fetchdata4", "RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page.wasm");
 
             options.UseFluxor(fluxorOptions =>

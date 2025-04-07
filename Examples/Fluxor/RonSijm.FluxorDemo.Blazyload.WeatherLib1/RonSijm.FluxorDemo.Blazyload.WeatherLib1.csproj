@@ -3,6 +3,7 @@
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.props" />
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.Blazor.Web.props" />
   <Import Project="..\..\..\BuildSettings\Include.RonSijm.Syringe.Lib.props" />
+  <Import Project="..\..\..\BuildSettings\Include.RonSijm.Syringe.Fluxor.props" />
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -11,6 +12,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe.Fluxor.Lib\RonSijm.Syringe.Fluxor.Lib.csproj" />
   </ItemGroup>
 
 </Project>

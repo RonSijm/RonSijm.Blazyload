@@ -1,7 +1,5 @@
-﻿@page "/fetchdata1"
-
-@using System.Diagnostics
-@using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux.FetchData
+﻿@page "/Lib1ReduceIntoReducer"
+@using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux.State3ActualReducer
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @inject IDispatcher Dispatcher
@@ -18,9 +16,8 @@
 {
     private void IncrementCount()
     {
-        Console.WriteLine("IncrementCount");
-        Debug.WriteLine("IncrementCount");
-        Dispatcher.Dispatch(new IncreaseWeatherLib1CounterAction());
+        Dispatcher.Dispatch(new Lib1Counterstate3UpdateAction());
     }
 }
-<CounterComponent />
+
+<Lib1ReducerIntoCounterComponent3 />

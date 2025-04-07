@@ -1,9 +1,9 @@
 using FluentAssertions;
-using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux;
+using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux.FetchData;
 using RonSijm.FluxorDemo.Tests.Helpers;
 using RonSijm.Syringe;
 
-namespace RonSijm.FluxorDemo.Tests;
+namespace RonSijm.FluxorDemo.Tests.Lib1;
 
 public class Lib1FetchDataTest
 {

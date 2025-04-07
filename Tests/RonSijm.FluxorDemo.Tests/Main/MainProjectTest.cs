@@ -3,7 +3,7 @@ using RonSijm.FluxorDemo.Blazyload.HostLib.Redux;
 using RonSijm.FluxorDemo.Tests.Helpers;
 using RonSijm.Syringe;
 
-namespace RonSijm.FluxorDemo.Tests;
+namespace RonSijm.FluxorDemo.Tests.Main;
 
 public class MainProjectIndexTest
 {
