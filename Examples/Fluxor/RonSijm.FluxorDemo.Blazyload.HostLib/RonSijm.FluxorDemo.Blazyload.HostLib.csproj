@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <Import Project="..\..\..\BuildSettings\Include.RonSijm.Syringe.Fluxor.props" />
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.props" />
@@ -10,6 +10,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+    <ProjectReferenceId>f6697b52-0c97-51e2-a528-a984a615caca</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,5 +31,4 @@
     <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page.csproj" />
     <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.csproj" />
   </ItemGroup>
-
 </Project>

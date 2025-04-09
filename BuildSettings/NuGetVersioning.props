@@ -2,6 +2,17 @@
   	<PropertyGroup>
         <Authors>Ron Sijm</Authors>
 		<Company>Ron Sijm</Company>
-        <VersionPrefix>2.0.0-alpha4.3</VersionPrefix>
+        <VersionPrefix>2.0.0-alpha4.4</VersionPrefix>
+	</PropertyGroup>
+    
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <DebugType>portable</DebugType>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EnableSourceLink>true</EnableSourceLink>
 	</PropertyGroup>
 </Project>

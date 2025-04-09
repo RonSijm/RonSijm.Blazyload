@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
   <Import Project="..\..\BuildSettings\NuGetVersioning.props" />
@@ -8,10 +8,10 @@
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>RonSijm.Blazyload</RootNamespace>
+    <ProjectReferenceId>12a03879-cf8f-5e7d-9f14-088354d4428e</ProjectReferenceId>
   </PropertyGroup>
 
   <PropertyGroup>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
     <Title>RonSijm.Blazyload.Hosting</Title>
     <Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
     <PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
@@ -20,7 +20,6 @@
     <PackageReadmeFile>packaging\README.md</PackageReadmeFile>
     <RootNamespace>RonSijm.Blazyload</RootNamespace>
     <PackageOutputPath>..\..\packages</PackageOutputPath>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,5 +30,4 @@
   <ItemGroup>
     <ProjectReference Include="..\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
   </ItemGroup>
-
 </Project>

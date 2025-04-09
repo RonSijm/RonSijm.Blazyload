@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
   <Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
@@ -7,7 +7,6 @@
   <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.Lib.props" />
 
   <PropertyGroup>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
     <Title>RonSijm.Blazyload</Title>
     <Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
     <PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
@@ -15,12 +14,11 @@
     <PackageIcon>packaging\blazyload-package-logo.png</PackageIcon>
     <PackageReadmeFile>packaging\README.md</PackageReadmeFile>
     <PackageOutputPath>..\..\packages</PackageOutputPath>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
+    <ProjectReferenceId>a43ffa29-5938-5a0e-9276-18ee8cf16045</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="..\..\packaging\blazyload-package-logo.png" Pack="true" PackagePath="packaging" />
     <None Include="..\..\README.md" Pack="true" PackagePath="packaging" />
   </ItemGroup>
-
 </Project>

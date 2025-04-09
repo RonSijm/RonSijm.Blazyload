@@ -1,10 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.props" />
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ProjectReferenceId>2cfbdf13-896f-50cb-a93a-126b1fa45a1e</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,16 +25,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
-
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib1\RonSijm.Demo.Blazyload.WeatherLib1.csproj" />
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib2\RonSijm.Demo.Blazyload.WeatherLib2.csproj" />
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib3\RonSijm.Demo.Blazyload.WeatherLib3.csproj" />
-
     <ProjectReference Include="..\Cascade\RonSijm.Demo.Blazyload.WeatherLib4.Page\RonSijm.Demo.Blazyload.WeatherLib4.Page.csproj" />
     <ProjectReference Include="..\Cascade\RonSijm.Demo.Blazyload.WeatherLib4.Component\RonSijm.Demo.Blazyload.WeatherLib4.Component.csproj" />
-
     <ProjectReference Include="..\Optional\RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull\RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.csproj" />
     <ProjectReference Include="..\Optional\RonSijm.Demo.Blazyload.WeatherLibOptionalNull\RonSijm.Demo.Blazyload.WeatherLibOptionalNull.csproj" />
   </ItemGroup>
-
 </Project>

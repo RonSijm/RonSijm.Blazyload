@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.props" />
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.Blazor.Web.props" />
@@ -10,6 +10,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
+    <ProjectReferenceId>f1d306c8-9306-5d14-b683-76a4ad592142</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-
     <ProjectReference Include="..\..\..\src\RonSijm.Blazyload.Hosting\RonSijm.Blazyload.Hosting.csproj" />
     <ProjectReference Include="..\..\..\src\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
     <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.HostLib\RonSijm.FluxorDemo.Blazyload.HostLib.csproj" />
@@ -31,5 +31,4 @@
   <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="23.6.2" />
   </ItemGroup>
-
 </Project>

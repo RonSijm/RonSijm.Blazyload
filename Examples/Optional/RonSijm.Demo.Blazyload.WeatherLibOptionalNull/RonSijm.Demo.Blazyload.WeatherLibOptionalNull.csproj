@@ -1,18 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <Import Project="..\..\..\BuildSettings\Include.RonSijm.Syringe.Lib.props" />
 
   <PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ProjectReferenceId>2c177218-a1ea-51e8-b773-13dae12e64c1</ProjectReferenceId>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
+  </ItemGroup>
 
-	<ItemGroup Condition="'$(Configuration)' != 'debug'">
-		<PackageReference Include="RonSijm.Blazyload.Library" Version="1.*" />
-	</ItemGroup>
-
+  <ItemGroup Condition="'$(Configuration)' != 'debug'">
+    <PackageReference Include="RonSijm.Blazyload.Library" Version="1.*" />
+  </ItemGroup>
 </Project>

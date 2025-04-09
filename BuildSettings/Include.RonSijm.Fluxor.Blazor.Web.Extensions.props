@@ -1,6 +1,6 @@
 <Project> 
   <ItemGroup Condition="'$(USE_FLUXOREXTENSIONS_FROM_SOURCE)' != 'true'"> 
-    <PackageReference Include="RonSijm.Fluxor.Blazor.Web.Extensions" Version="[0.0.2,)" /> 
+    <PackageReference Include="RonSijm.Fluxor.Blazor.Web.Extensions" Version="[0.0.3,)" /> 
   </ItemGroup> 
  
   <ItemGroup Condition="'$(USE_FLUXOREXTENSIONS_FROM_SOURCE)' == 'true'"> 

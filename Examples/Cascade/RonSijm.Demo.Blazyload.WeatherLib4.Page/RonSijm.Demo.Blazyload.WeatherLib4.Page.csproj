@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ProjectReferenceId>eb467ef3-930f-533d-bbad-cf3d868aeeb9</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,5 +13,4 @@
   <ItemGroup>
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib4.Component\RonSijm.Demo.Blazyload.WeatherLib4.Component.csproj" />
   </ItemGroup>
-
 </Project>

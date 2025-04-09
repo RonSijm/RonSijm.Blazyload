@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
   <Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
@@ -8,7 +8,6 @@
   <Import Project="..\..\BuildSettings\Include.Fluxor.props" />
 
   <PropertyGroup>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
     <Title>RonSijm.Blazyload.Fluxor</Title>
     <Description>A C# Blazor library to effortlessly implement Lazy Loading and Dependency Injection</Description>
     <PackageProjectUrl>https://github.com/RonSijm/RonSijm.Blazyload</PackageProjectUrl>
@@ -17,7 +16,7 @@
     <PackageReadmeFile>packaging\README.md</PackageReadmeFile>
     <RootNamespace>RonSijm.Blazyload</RootNamespace>
     <PackageOutputPath>..\..\packages</PackageOutputPath>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
+    <ProjectReferenceId>87ff5e8e-4378-5fe2-93b7-7a7c81e5bd0a</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,5 +27,4 @@
   <ItemGroup>
     <ProjectReference Include="..\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
   </ItemGroup>
-
 </Project>

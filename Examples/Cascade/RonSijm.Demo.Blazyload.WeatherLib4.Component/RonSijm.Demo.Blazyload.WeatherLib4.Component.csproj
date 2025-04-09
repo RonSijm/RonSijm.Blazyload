@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-	<Import Project="..\..\..\BuildSettings\DependencyInjectionAbstractionsForFramework.props" />
+  <Import Project="..\..\..\BuildSettings\DependencyInjectionAbstractionsForFramework.props" />
 
-	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
-
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ProjectReferenceId>818193f1-13d5-51fa-a947-6e53f26db74c</ProjectReferenceId>
+  </PropertyGroup>
 </Project>

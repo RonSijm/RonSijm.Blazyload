@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.props" />
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.Blazor.Web.props" />
@@ -8,6 +8,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ProjectReferenceId>59247ddd-574d-56aa-854a-d9473c4b9529</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,5 +18,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe.Fluxor.Lib\RonSijm.Syringe.Fluxor.Lib.csproj" />
   </ItemGroup>
-
 </Project>

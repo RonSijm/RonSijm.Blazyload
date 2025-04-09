@@ -1,10 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <Import Project="..\..\..\BuildSettings\Include.RonSijm.Syringe.props" />
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ProjectReferenceId>940b8864-63aa-50f8-935b-754bfd38dad4</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*" PrivateAssets="all" />
   </ItemGroup>
-
   <!--Between here and the bottom-->
 
   <ItemGroup>
@@ -25,37 +25,28 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
-
     <ProjectReference Include="..\..\RonSijm.Demo.Blazyload.WeatherLib1\RonSijm.Demo.Blazyload.WeatherLib1.csproj" />
     <ProjectReference Include="..\..\RonSijm.Demo.Blazyload.WeatherLib2\RonSijm.Demo.Blazyload.WeatherLib2.csproj" />
     <ProjectReference Include="..\..\RonSijm.Demo.Blazyload.WeatherLib3\RonSijm.Demo.Blazyload.WeatherLib3.csproj" />
-
     <ProjectReference Include="..\..\Cascade\RonSijm.Demo.Blazyload.WeatherLib4.Page\RonSijm.Demo.Blazyload.WeatherLib4.Page.csproj" />
     <ProjectReference Include="..\..\Cascade\RonSijm.Demo.Blazyload.WeatherLib4.Component\RonSijm.Demo.Blazyload.WeatherLib4.Component.csproj" />
-
   </ItemGroup>
-
   <!--Between here and the top-->
   <!-- You can technically leave all of this out of your project. -->
   <!-- Since the projects are dynamically loaded without care about whether you actually marked an assembly as "BlazorWebAssemblyLazyLoad". -->
   <!-- You'd have to leave out both the ProjectReference and the BlazorWebAssemblyLazyLoad though, otherwise the project is non-lazy-loaded -->
   <!-- So leaving in all the project references is easiest. -->
-
   <!-- Pre build event to remove _framework folder -->
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\&quot; || exit 0" />
   </Target>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; || exit 0 &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; || exit 0" />
     <Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib1*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib1&quot; || exit 0" />
-
     <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot; || exit 0 &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot; || exit 0" />
     <Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib2*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib2&quot; || exit 0" />
-
     <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot; || exit 0 &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot; || exit 0" />
     <Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib3*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib3&quot; || exit 0" />
-
     <Exec Command="rd /s /q &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot; || exit 0 &amp; mkdir &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot; || exit 0" />
     <Exec Command="move /Y &quot;$(TargetDir)wwwroot\_framework\*WeatherLib4*&quot; &quot;$(ProjectDir)wwwroot\_framework\WeatherLib4&quot; || exit 0" />
   </Target>
@@ -65,5 +56,4 @@
     <ExcludeFoldersFromDeployment>$(ExcludeFoldersFromDeployment)</ExcludeFoldersFromDeployment>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-
 </Project>
