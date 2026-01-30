@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace>RonSijm.Blazyload</RootNamespace>
+	</PropertyGroup>
+
+	<Import Project="..\..\BuildSettings\SupportedFrameworks.props" />
+  <Import Project="..\..\BuildSettings\WebAssemblyForFramework.props" />
+  <Import Project="..\..\BuildSettings\NuGetVersioning.props" />
+  <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.props" />
+  <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.Lib.props" />
+
+</Project>

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Fluxor;
 using Microsoft.Extensions.DependencyInjection;
+using RonSijm.Syringe;
 
 namespace RonSijm.Blazyload.Extensions;
 public class DispatchAssemblyLoadedExtension : BaseLoadAfterExtension

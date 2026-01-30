@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.Redux;
 using RonSijm.FluxorDemo.Tests.Helpers;
 using RonSijm.Syringe;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RonSijm.Syringe;
+using RonSijm.Syringe;
 using RonSijm.Syringe.DependencyInjection;
 
 namespace RonSijm.FluxorDemo.Blazyload.WeatherLib1.Properties;

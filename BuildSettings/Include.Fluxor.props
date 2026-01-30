@@ -1,6 +1,6 @@
 <Project> 
   <ItemGroup Condition="'$(USE_FLUXOR_FROM_SOURCE)' != 'true'"> 
-    <PackageReference Include="Fluxor" Version="[6.6.0,)" /> 
+    <PackageReference Include="Fluxor" Version="[6.9.0,)" /> 
   </ItemGroup> 
  
   <ItemGroup Condition="'$(USE_FLUXOR_FROM_SOURCE)' == 'true'"> 

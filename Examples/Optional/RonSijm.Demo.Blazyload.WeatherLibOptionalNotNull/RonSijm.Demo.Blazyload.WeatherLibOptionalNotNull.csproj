@@ -3,16 +3,17 @@
   <Import Project="..\..\..\BuildSettings\Include.RonSijm.Syringe.Lib.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <ProjectReferenceId>a064550c-ec9b-5b10-ad7c-463838fa82a0</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.*" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' != 'debug'">
     <PackageReference Include="RonSijm.Blazyload.Library" Version="1.*" />
   </ItemGroup>
 </Project>
+

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.6.33417.168
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11408.92 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6CA40C0F-7403-483B-973E-AFB6FA50D087}"
 EndProject
@@ -104,6 +104,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RonSijm.Fluxor.Extensions", "..\RonSijm.FuxorExtensions\src\RonSijm.Fluxor.Extensions\RonSijm.Fluxor.Extensions.csproj", "{C4D573DC-96C0-72C5-DA01-BBE9A2B7D3C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fluxor.Blazor.Web.Analyzers", "..\..\Libraries\Fluxor\Source\Lib\Fluxor.Blazor.Web.Analyzers\Fluxor.Blazor.Web.Analyzers.csproj", "{A0930B15-C3F5-197B-1365-AFC6CB4A458D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RonSijm.Blazyload.Tests", "Tests\RonSijm.Blazyload.Tests\RonSijm.Blazyload.Tests.csproj", "{4D7ABD3B-5DF9-0868-6C78-EDAF8624FFC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RonSijm.Blazyload.IntegrationTests", "Tests\RonSijm.Blazyload.IntegrationTests\RonSijm.Blazyload.IntegrationTests.csproj", "{4EA3358B-313F-DC00-8B65-96695990244E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -255,6 +259,14 @@ Global
 		{A0930B15-C3F5-197B-1365-AFC6CB4A458D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0930B15-C3F5-197B-1365-AFC6CB4A458D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0930B15-C3F5-197B-1365-AFC6CB4A458D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D7ABD3B-5DF9-0868-6C78-EDAF8624FFC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D7ABD3B-5DF9-0868-6C78-EDAF8624FFC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D7ABD3B-5DF9-0868-6C78-EDAF8624FFC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D7ABD3B-5DF9-0868-6C78-EDAF8624FFC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EA3358B-313F-DC00-8B65-96695990244E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EA3358B-313F-DC00-8B65-96695990244E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EA3358B-313F-DC00-8B65-96695990244E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA3358B-313F-DC00-8B65-96695990244E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -306,6 +318,8 @@ Global
 		{34935D1B-21CA-5198-8D3C-50C5353C98D3} = {4458B8BA-EF15-4FE8-ACEF-6EFE32E2D9D3}
 		{C4D573DC-96C0-72C5-DA01-BBE9A2B7D3C7} = {4458B8BA-EF15-4FE8-ACEF-6EFE32E2D9D3}
 		{A0930B15-C3F5-197B-1365-AFC6CB4A458D} = {52ADB2E9-59F1-4DF4-860E-EB87557AB561}
+		{4D7ABD3B-5DF9-0868-6C78-EDAF8624FFC8} = {EF299C30-5DBB-4321-A846-24ADF401A04A}
+		{4EA3358B-313F-DC00-8B65-96695990244E} = {EF299C30-5DBB-4321-A846-24ADF401A04A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DE662B2C-744A-47C4-A8A4-B6EBFFFCBE9D}

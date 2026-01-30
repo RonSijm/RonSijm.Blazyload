@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <ProjectReferenceId>eb467ef3-930f-533d-bbad-cf3d868aeeb9</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.*" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RonSijm.Demo.Blazyload.WeatherLib4.Component\RonSijm.Demo.Blazyload.WeatherLib4.Component.csproj" />
   </ItemGroup>
 </Project>
+

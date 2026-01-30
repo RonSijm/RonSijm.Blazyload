@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using RonSijm.FluxorDemo.Blazyload.HostLib.Redux;
 using RonSijm.FluxorDemo.Tests.Helpers;
 using RonSijm.Syringe;
@@ -85,7 +85,7 @@ public class MainProjectIndexTest
         counterState.Value.Count.Should().Be(1);
     }
 
-    private static async Task<TestContext> CreateContext(bool rebuild)
+    private static async Task<FluxorTestContext> CreateContext(bool rebuild)
     {
         var context = await TestSetup.Setup();
         if (rebuild)

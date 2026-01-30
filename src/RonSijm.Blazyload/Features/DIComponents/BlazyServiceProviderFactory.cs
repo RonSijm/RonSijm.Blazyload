@@ -6,7 +6,9 @@ public class BlazyServiceProviderFactory(BlazyloadProviderOptions options) : ISe
 {
     public SyringeServiceProviderBuilder CreateBuilder(IServiceCollection services)
     {
-        services.AddSingleton<IAssemblyLoader, BlazyAssemblyLoader>();
+        // Register as both the Blazor-specific interface and the generic Syringe interface
+        services.AddSingleton<IBlazyAssemblyLoader, BlazyAssemblyLoader>();
+        services.AddSingleton<Syringe.IAssemblyLoader>(sp => sp.GetRequiredService<IBlazyAssemblyLoader>());
         services.AddSingleton(options.AssemblyLoadConfiguration);
         services.AddSingleton(options.AssemblyLoaderOptions);
         var container = new SyringeServiceProviderBuilder(services);

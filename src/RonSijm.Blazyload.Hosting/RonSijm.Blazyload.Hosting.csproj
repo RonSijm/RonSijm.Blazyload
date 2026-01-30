@@ -30,4 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.2" />
+  </ItemGroup>
 </Project>

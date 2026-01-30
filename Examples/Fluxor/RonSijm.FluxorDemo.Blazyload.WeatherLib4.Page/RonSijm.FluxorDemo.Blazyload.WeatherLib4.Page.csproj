@@ -4,16 +4,17 @@
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.Blazor.Web.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <ProjectReferenceId>38779987-8e81-5fa0-933a-16bbd1383d30</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.*" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.csproj" />
   </ItemGroup>
 </Project>
+

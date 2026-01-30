@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using RonSijm.FluxorDemo.Blazyload.HostLib.Redux;
 using RonSijm.FluxorDemo.Blazyload.WeatherLib1.Redux.FetchData;
 using RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.Redux;

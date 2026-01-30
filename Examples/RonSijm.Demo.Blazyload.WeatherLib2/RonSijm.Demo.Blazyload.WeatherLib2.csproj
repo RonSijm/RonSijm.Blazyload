@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <ProjectReferenceId>f14e733a-0b11-5f57-9ccf-4c21a97b08b7</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.*" />
   </ItemGroup>
 </Project>
+

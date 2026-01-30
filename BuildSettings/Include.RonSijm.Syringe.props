@@ -1,6 +1,6 @@
 <Project> 
   <ItemGroup Condition="'$(USE_SYRINGE_FROM_SOURCE)' != 'true'"> 
-    <PackageReference Include="RonSijm.Syringe" Version="[1.0.0-Alpha1.5,)" /> 
+    <PackageReference Include="RonSijm.Syringe" Version="[1.0.0-RC1.6,)" /> 
   </ItemGroup> 
  
   <ItemGroup Condition="'$(USE_SYRINGE_FROM_SOURCE)' == 'true'"> 

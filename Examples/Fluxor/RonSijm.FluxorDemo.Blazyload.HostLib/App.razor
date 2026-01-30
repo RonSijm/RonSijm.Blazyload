@@ -1,9 +1,9 @@
 ﻿@using RonSijm.FluxorDemo.Blazyload.HostLib.Shared
 
-@inject IAssemblyLoader AssemblyLoader
+@inject IBlazyAssemblyLoader AssemblyLoader
 
 <Fluxor.Blazor.Web.StoreInitializer />
-<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@AssemblyLoader.HandleNavigation" AdditionalAssemblies="@AssemblyLoader.LoadedAssemblies">
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@AssemblyLoader.OnNavigateAsync" AdditionalAssemblies="@AssemblyLoader.AdditionalAssemblies">
 
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />

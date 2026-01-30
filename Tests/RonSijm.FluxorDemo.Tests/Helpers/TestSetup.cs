@@ -9,9 +9,9 @@ namespace RonSijm.FluxorDemo.Tests.Helpers;
 
 public static class TestSetup
 {
-    public static async Task<TestContext> Setup()
+    public static async Task<FluxorTestContext> Setup()
     {
-        var result = new TestContext
+        var result = new FluxorTestContext
         {
             DefaultBuilder = Host.CreateDefaultBuilder()
         };
@@ -29,7 +29,7 @@ public static class TestSetup
     }
 }
 
-public class TestContext
+public class FluxorTestContext
 {
     public IHostBuilder DefaultBuilder { get; set; }
     public IHost Host { get; set; }
@@ -37,3 +37,4 @@ public class TestContext
     public IStore Store { get; set; }
     public IDispatcher Dispatcher { get; set; }
 }
+

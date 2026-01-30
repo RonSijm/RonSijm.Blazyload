@@ -5,28 +5,35 @@ namespace RonSijm.Blazyload;
 // ReSharper disable once UnusedType.Global - Justification: Used by library consumers
 public static class BlazyloadBootstapper
 {
-    // ReSharper disable once UnusedMember.Global - Justification: Used by library consumers
-    public static void UseSyringe(this WebAssemblyHostBuilder builder, Action<BlazyloadProviderOptions> optionsConfig = null)
+    internal static BlazyServiceProviderFactory CreateSyringeFactory(Action<BlazyloadProviderOptions> optionsConfig = null)
     {
         var options = new BlazyloadProviderOptions();
         optionsConfig?.Invoke(options);
+        return new BlazyServiceProviderFactory(options);
+    }
 
-        // Not registering services here, but in BlazyServiceProviderFactory instead, so that a consumer (like bUnit) will always have the required services registered.
-        builder.ConfigureContainer(new BlazyServiceProviderFactory(options));
+    internal static BlazyServiceProviderFactory CreateBlazyloadFactory(Action<BlazyloadProviderOptions> optionsConfig = null)
+    {
+        var blazyOptions = new BlazyloadProviderOptions();
+
+        if (optionsConfig != null)
+        {
+            optionsConfig(blazyOptions);
+        }
+
+        blazyOptions.AddOption(blazyOptions);
+        return new BlazyServiceProviderFactory(blazyOptions);
+    }
+
+
+    // ReSharper disable once UnusedMember.Global - Justification: Used by library consumers
+    public static void UseSyringe(this WebAssemblyHostBuilder builder, Action<BlazyloadProviderOptions> optionsConfig = null)
+    {
+        builder.ConfigureContainer(CreateSyringeFactory(optionsConfig));
     }
 
     public static void UseBlazyload(this WebAssemblyHostBuilder builder, Action<BlazyloadProviderOptions> options = null)
     {
-        var blazyOptions = new BlazyloadProviderOptions();
-
-        if (options != null)
-        {
-            options(blazyOptions);
-        }
-
-        blazyOptions.AddOption(blazyOptions);
-
-        // Not registering services here, but in BlazyServiceProviderFactory instead, so that a consumer (like bUnit) will always have the required services registered.
-        builder.ConfigureContainer(new BlazyServiceProviderFactory(blazyOptions));
+        builder.ConfigureContainer(CreateBlazyloadFactory(options));
     }
 }

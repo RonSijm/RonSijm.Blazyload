@@ -6,7 +6,7 @@ namespace RonSijm.Blazyload;
 public class LoadAssemblyEffect : Effect<LoadAssembly>
 {
     [Inject]
-    public IAssemblyLoader AssemblyLoader { get; set; }
+    public IBlazyAssemblyLoader AssemblyLoader { get; set; }
 
     public override async Task HandleAsync(LoadAssembly action, IDispatcher dispatcher)
     {

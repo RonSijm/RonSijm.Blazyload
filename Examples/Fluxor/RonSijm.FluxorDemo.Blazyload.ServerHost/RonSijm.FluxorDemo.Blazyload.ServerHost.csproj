@@ -7,7 +7,7 @@
   <Import Project="..\..\..\BuildSettings\Include.RonSijm.Fluxor.Blazor.Web.Extensions.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <ProjectReferenceId>f1d306c8-9306-5d14-b683-76a4ad592142</ProjectReferenceId>
@@ -32,3 +32,4 @@
     <PackageReference Include="ElectronNET.API" Version="23.6.2" />
   </ItemGroup>
 </Project>
+

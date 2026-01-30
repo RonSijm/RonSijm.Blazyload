@@ -3,15 +3,15 @@
   <Import Project="..\..\..\BuildSettings\Include.RonSijm.Syringe.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <ProjectReferenceId>940b8864-63aa-50f8-935b-754bfd38dad4</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*" PrivateAssets="all" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.*" PrivateAssets="all" />
   </ItemGroup>
   <!--Between here and the bottom-->
 
@@ -57,3 +57,4 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 </Project>
+

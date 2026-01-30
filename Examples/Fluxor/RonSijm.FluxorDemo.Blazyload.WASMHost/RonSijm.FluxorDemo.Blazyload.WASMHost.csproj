@@ -5,15 +5,15 @@
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.Blazor.Web.ReduxDevTools.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <ProjectReferenceId>fb12d630-2b14-5cc4-91a1-59e4a63118f6</ProjectReferenceId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.*" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.*" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,3 +30,4 @@
     <ProjectReference Include="..\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component\RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.csproj" />
   </ItemGroup>
 </Project>
+

@@ -5,8 +5,9 @@
   <Import Project="..\..\..\BuildSettings\DependencyInjectionAbstractionsForFramework.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <ProjectReferenceId>6042c349-9b4a-531d-bb64-599e822e8f2d</ProjectReferenceId>
   </PropertyGroup>
 </Project>
+
