@@ -1,7 +1,10 @@
-﻿@using RonSijm.Blazyload
+@* 
+    DEPRECATED: This is the old V1 style of using Blazyload.
+    In V2, use LoadOnNavigation in Program.cs and AssemblyLoader.OnNavigateAsync in App.razor instead.
+*@
 @inject IBlazyAssemblyLoader AssemblyLoader;
 
-<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@AssemblyLoader.OnNavigateAsync" AdditionalAssemblies="@AssemblyLoader.AdditionalAssemblies">
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync" AdditionalAssemblies="@AssemblyLoader.AdditionalAssemblies">
 
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -14,3 +17,4 @@
         </LayoutView>
     </NotFound>
 </Router>
+

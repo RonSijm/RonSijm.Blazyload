@@ -5,9 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace RonSijm.Demo.Blazyload.WeatherLib2.Properties;
 
+#region CodeExample-BlazyBootstrap-WithoutInterface
 /// <summary>
 /// In this example you can see how to bootstrap something without using a reference to the library.
-/// Note that you must exactly implement "public IEnumerable&lt;ServiceDescriptor&gt; Bootstrap()"
+/// Note that you must exactly implement "public Task&lt;IEnumerable&lt;ServiceDescriptor&gt;&gt; Bootstrap()"
 /// </summary>
 public class BlazyBootstrap
 {
@@ -20,3 +21,4 @@ public class BlazyBootstrap
         return Task.FromResult<IEnumerable<ServiceDescriptor>>(serviceCollection);
     }
 }
+#endregion

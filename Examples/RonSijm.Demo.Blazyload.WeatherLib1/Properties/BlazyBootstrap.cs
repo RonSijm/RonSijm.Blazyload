@@ -3,6 +3,7 @@ using RonSijm.Syringe;
 
 namespace RonSijm.Demo.Blazyload.WeatherLib1.Properties;
 
+#region CodeExample-BlazyBootstrap-WithInterface
 // ReSharper disable once UnusedType.Global
 public class BlazyBootstrap : IBootstrapper
 {
@@ -14,3 +15,4 @@ public class BlazyBootstrap : IBootstrapper
         return Task.FromResult<IEnumerable<ServiceDescriptor>>(serviceCollection);
     }
 }
+#endregion

@@ -1,6 +1,7 @@
-﻿@inject BlazyAssemblyLoader BlazyAssemblyLoader;
+﻿@using RonSijm.Blazyload
+@inject IBlazyAssemblyLoader AssemblyLoader;
 
-<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@OnNavigateAsync" AdditionalAssemblies="@_lazyLoadedAssemblies">
+<Router AppAssembly="@typeof(App).Assembly" OnNavigateAsync="@AssemblyLoader.OnNavigateAsync" AdditionalAssemblies="@AssemblyLoader.AdditionalAssemblies">
 
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -13,36 +14,3 @@
         </LayoutView>
     </NotFound>
 </Router>
-
-@code {
-
-    private readonly List<Assembly> _lazyLoadedAssemblies = [];
-
-    private async Task OnNavigateAsync(NavigationContext args)
-    {
-        try
-        {
-            if (args.Path == "fetchdata1")
-            {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(["RonSijm.Demo.Blazyload.WeatherLib1.wasm"]);
-                _lazyLoadedAssemblies.AddRange(assemblies);
-            }
-            else if (args.Path == "fetchdata2")
-            {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(["RonSijm.Demo.Blazyload.WeatherLib2.wasm"]);
-            }
-            else if (args.Path == "fetchdata3")
-            {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(["RonSijm.Demo.Blazyload.WeatherLib3.wasm"]);
-            }
-            else if (args.Path == "fetchdata4")
-            {
-                var assemblies = await BlazyAssemblyLoader.LoadAssembliesAsync(["RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm"]);
-            }
-        }
-        catch (Exception)
-        {
-            // Do nothing
-        }
-    }
-}

@@ -364,6 +364,9 @@ public class BlazyAssemblyLoaderAdvancedTests
         assemblyLoadContext.Received(1).LoadFromStream(Arg.Any<Stream>(), null);
     }
 
+    // This test only applies to pre-.NET 10 versions where blazor.boot.json exists.
+    // In .NET 10+, blazor.boot.json is no longer used and preloaded assemblies are discovered via JS interop.
+#if !NET10_0_OR_GREATER
     [Fact]
     public async Task LoadAssembliesAsync_ShouldSkipPreloadedAssemblies()
     {
@@ -408,6 +411,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         result.Should().BeEmpty();
         assemblyLoadContext.DidNotReceive().LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream>());
     }
+#endif
 
     [Fact]
     public async Task LoadAssembliesAsync_ShouldSkipRuntimeLoadedAssemblies()

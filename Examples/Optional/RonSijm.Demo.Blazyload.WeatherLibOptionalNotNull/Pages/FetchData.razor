@@ -1,5 +1,7 @@
-﻿@page "/fetchdataOptionalNotNull"
+﻿@* #region CodeExample-OptionalDependency *@
+@page "/fetchdataOptionalNotNull"
 @using RonSijm.Syringe
+@* Use Optional<T> for dependencies that may not be loaded yet *@
 @inject Optional<IWeatherResolver> WeatherResolver
 
 <h1>Weather forecast - Nullable not null</h1>
@@ -46,9 +48,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        // Check if the optional dependency has a value before using it
         if (WeatherResolver != null)
         {
             _forecasts = await WeatherResolver.Value.GetWeather();
         }
     }
 }
+@* #endregion *@

@@ -2,11 +2,9 @@
 
 namespace RonSijm.Demo.Blazyload.WeatherLib3;
 
+#region CodeExample-CustomRegistrationClass
 // ReSharper disable once UnusedType.Global
 public class CustomRegistrationClass
-//#if DEBUG
-//    : RonSijm.Blazyload.Library.Features.Consumer.IBlazyBootstrap
-//#endif
 {
     public Task<IEnumerable<ServiceDescriptor>> Bootstrap()
     {
@@ -16,3 +14,4 @@ public class CustomRegistrationClass
         return Task.FromResult<IEnumerable<ServiceDescriptor>>(serviceCollection);
     }
 }
+#endregion

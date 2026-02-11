@@ -3,6 +3,7 @@ using RonSijm.Blazyload;
 
 namespace RonSijm.FluxorDemo.Blazyload.HostLib.Wiring;
 
+#region CodeExample-FluxorSetup
 public static class DependencyInjectionService
 {
     // Note: You don't *need* to declare your options like this, you can do it inside main.
@@ -13,13 +14,17 @@ public static class DependencyInjectionService
 
         var optionsFactory = new Action<BlazyloadProviderOptions>(options =>
         {
+            #region CodeExample-NavigationBasedLoading
+            // Automatically load assemblies when navigating to specific routes
             options.LoadOnNavigation("fetchdata1", "RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm");
             options.LoadOnNavigation("Lib1ReduceInto", "RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm");
             options.LoadOnNavigation("Lib1ReduceIntoMethod", "RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm");
             options.LoadOnNavigation("Lib1ReduceIntoReducer", "RonSijm.FluxorDemo.Blazyload.WeatherLib1.wasm");
 
             options.LoadOnNavigation("fetchdata4", "RonSijm.FluxorDemo.Blazyload.WeatherLib4.Page.wasm");
+            #endregion
 
+            // Configure Fluxor for state management with lazy-loaded assemblies
             options.UseFluxor(fluxorOptions =>
             {
                 fluxorOptions.ScanAssemblies(currAssembly);
@@ -36,3 +41,4 @@ public static class DependencyInjectionService
         return optionsFactory;
     }
 }
+#endregion

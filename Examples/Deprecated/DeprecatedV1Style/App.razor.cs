@@ -1,14 +1,19 @@
-﻿using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Routing;
 
-namespace RonSijm.Demo.Blazyload.Host;
+namespace RonSijm.Demo.Blazyload.Deprecated;
 
+#region CodeExample-DeprecatedV1Style
+/// <summary>
+/// DEPRECATED: This is the old V1 style of manually handling navigation.
+/// In V2, use LoadOnNavigation in Program.cs instead.
+/// </summary>
 public partial class App
 {
-
     private async Task OnNavigateAsync(NavigationContext args)
     {
         try
         {
+            // Old V1 style: manually check paths and load assemblies
             if (args.Path == "fetchdata1")
             {
                 await AssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib1.wasm");
@@ -21,18 +26,6 @@ public partial class App
             {
                 await AssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib3.wasm");
             }
-            else if (args.Path == "fetchdata4")
-            {
-                await AssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLib4.Page.wasm");
-            }
-            else if (args.Path == "fetchdataOptionalNull")
-            {
-                await AssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLibOptionalNull.wasm");
-            }
-            else if (args.Path == "fetchdataOptionalNotNull")
-            {
-                await AssemblyLoader.LoadAssemblyAsync("RonSijm.Demo.Blazyload.WeatherLibOptionalNotNull.wasm");
-            }
         }
         catch (Exception)
         {
@@ -40,3 +33,5 @@ public partial class App
         }
     }
 }
+#endregion
+
