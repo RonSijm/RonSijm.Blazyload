@@ -1,5 +1,8 @@
 ﻿using AwesomeAssertions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using NSubstitute;
 using RonSijm.Syringe;
 
 namespace RonSijm.Blazyload.Tests;
@@ -207,5 +210,38 @@ public class BlazyServiceProviderFactoryTests
         syringeProvider.Options.Should().Be(options);
     }
 
-}
+    [Fact]
+    public async Task LoaderAliasesSurviveServiceProviderRebuild()
+    {
+        var root = $"RejectedAssembly{Guid.NewGuid():N}";
+        var options = new BlazyloadProviderOptions();
+        options.UseSettingsForDll(root).UseHttpHandler((_, _, _) => false);
+        var factory = new BlazyServiceProviderFactory(options);
+        var services = new ServiceCollection();
+        var navigation = new LoaderNavigation();
+        navigation.Configure();
+        services.AddSingleton<NavigationManager>(navigation);
+        services.AddSingleton(Substitute.For<IJSRuntime>());
+        var builder = factory.CreateBuilder(services);
+        using var provider = (SyringeServiceProvider)factory.CreateServiceProvider(builder);
+        var loader = provider.GetRequiredService<IBlazyAssemblyLoader>();
+        Assert.Same(loader, provider.GetRequiredService<IAssemblyLoader>());
+        var failure = await Assert.ThrowsAsync<BlazyAssemblyLoadException>(() => loader.LoadAssemblyAsync($"{root}.wasm"));
+        Assert.IsType<FileNotFoundException>(failure.InnerException);
 
+        var additionalServices = new ServiceCollection();
+        additionalServices.AddSingleton("added after loading");
+        await provider.LoadServiceDescriptors(additionalServices);
+        provider.Build();
+
+        Assert.Same(loader, provider.GetRequiredService<IBlazyAssemblyLoader>());
+        Assert.Same(loader, provider.GetRequiredService<IAssemblyLoader>());
+        Assert.Empty(loader.AdditionalAssemblies);
+    }
+
+    private sealed class LoaderNavigation() : NavigationManager
+    {
+        public void Configure() => Initialize("https://example.test/", "https://example.test/");
+        protected override void NavigateToCore(string uri, bool forceLoad) => throw new NotSupportedException();
+    }
+}

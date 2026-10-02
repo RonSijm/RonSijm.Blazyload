@@ -43,32 +43,29 @@ public class BlazyAssemblyLoader : IBlazyAssemblyLoader
 
     internal async Task HandleNavigationInternal(string path)
     {
-        try
+        var assembly = _components.NavigationResolver.GetAssemblyForPath(path);
+        if (assembly != null)
         {
-            var assembly = _components.NavigationResolver.GetAssemblyForPath(path);
-            if (assembly != null)
-            {
-                await LoadAssemblyAsync(assembly);
-            }
-        }
-        catch
-        {
-            // Silently ignore navigation errors
+            await LoadAssemblyAsync(assembly);
         }
     }
 
     internal async Task<List<Assembly>> LoadAssembliesAsync(IEnumerable<string> assembliesToLoad, bool isRecursive, List<ServiceDescriptor> loadedDescriptors = null)
     {
-        await InitializeStateTrackerAsync();
-        loadedDescriptors ??= [];
-
-        var unattemptedAssemblies = _components.StateTracker.FilterUnattemptedAssemblies(assembliesToLoad);
-        var loadedAssemblies = new List<Assembly>();
-
+        var requestedAssemblies = assembliesToLoad.ToList();
         try
         {
+            await InitializeStateTrackerAsync();
+            loadedDescriptors ??= [];
+            var unattemptedAssemblies = _components.StateTracker.FilterUnattemptedAssemblies(requestedAssemblies);
+            var loadedAssemblies = new List<Assembly>();
             var assemblyWithOptions = _components.OptionsResolver.ResolveOptions(unattemptedAssemblies);
             var assemblies = await _components.FileLoader.LoadAssembliesWithOptionsAsync(assemblyWithOptions);
+
+            if (assemblies.Length != unattemptedAssemblies.Count)
+            {
+                throw new FileNotFoundException($"Could not load all requested assemblies: {string.Join(", ", unattemptedAssemblies)}.");
+            }
 
             if (assemblies.Length == 0)
             {
@@ -76,34 +73,32 @@ public class BlazyAssemblyLoader : IBlazyAssemblyLoader
             }
 
             loadedAssemblies.AddRange(assemblies);
-
-            var cascadeResults = await _components.CascadeLoader.LoadReferencedAssembliesAsync(
-                assemblies,
-                names => LoadAssembliesAsync(names, true, loadedDescriptors));
+            var cascadeResults = await _components.CascadeLoader.LoadReferencedAssembliesAsync(assemblies, names => LoadAssembliesAsync(names, true, loadedDescriptors));
             loadedAssemblies.AddRange(cascadeResults);
-
             var serviceDescriptors = await _components.ServiceRegistrar.RegisterServicesAsync(assemblies);
             loadedDescriptors.AddRange(serviceDescriptors);
-        }
-        catch (Exception e)
-        {
-            if (!isRecursive || _components.Options.EnableLoggingForCascadeErrors)
+
+            if (!isRecursive)
             {
-                _components.Logger.WriteLine(e);
+                _components.ServiceRegistrar.FinalizeLoading(loadedAssemblies, loadedDescriptors);
+                AdditionalAssemblies.AddRange(loadedAssemblies);
             }
-        }
 
-        _components.StateTracker.MarkAsLoaded(unattemptedAssemblies);
-
-        if (isRecursive)
-        {
+            _components.StateTracker.MarkAsLoaded(unattemptedAssemblies);
             return loadedAssemblies;
         }
+        catch (Exception exception) when (!isRecursive)
+        {
+            if (exception is BlazyAssemblyLoadException)
+            {
+                _components.Logger.WriteLine(exception);
+                throw;
+            }
 
-        _components.ServiceRegistrar.FinalizeLoading(loadedAssemblies, loadedDescriptors);
-        AdditionalAssemblies.AddRange(loadedAssemblies);
-
-        return loadedAssemblies;
+            var loadException = new BlazyAssemblyLoadException(string.Join(", ", requestedAssemblies), exception);
+            _components.Logger.WriteLine(loadException);
+            throw loadException;
+        }
     }
 
     private async Task InitializeStateTrackerAsync()

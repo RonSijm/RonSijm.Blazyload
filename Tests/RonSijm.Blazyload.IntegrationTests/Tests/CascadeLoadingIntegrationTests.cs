@@ -13,7 +13,7 @@ namespace RonSijm.Blazyload.IntegrationTests.Tests;
 public class CascadeLoadingIntegrationTests
 {
     [Fact]
-    public async Task LoadAssemblyAsync_WithCascadeEnabled_ShouldAttemptToLoadReferencedAssemblies()
+    public async Task LoadAssemblyAsync_WithMissingRequiredReference_ShouldNotPublishParent()
     {
         // Arrange
         var assemblyBytes = TestSetup.CreateDummyAssemblyBytes();
@@ -24,8 +24,7 @@ public class CascadeLoadingIntegrationTests
             new Dictionary<string, byte[]>
             {
                 ["ParentAssembly.wasm"] = assemblyBytes
-                // Note: ChildAssembly.wasm is NOT provided, simulating a referenced assembly
-                // that may already be loaded or not available for lazy loading
+                // The required child is unavailable, so the parent cannot become ready.
             });
 
         await using var hostContext = await TestSetup.CreateContext();
@@ -46,11 +45,11 @@ public class CascadeLoadingIntegrationTests
             new AssemblyLoadConfiguration());
 
         // Act
-        var loadedAssemblies = await loader.LoadAssemblyAsync("ParentAssembly.wasm");
+        var failure = await Assert.ThrowsAsync<BlazyAssemblyLoadException>(() => loader.LoadAssemblyAsync("ParentAssembly.wasm"));
 
-        // Assert - Parent should be loaded, cascade loading is attempted but child may not be available
-        loadedAssemblies.Should().HaveCount(1);
-        loader.AdditionalAssemblies.Should().Contain(parentAssembly);
+        loader.AdditionalAssemblies.Should().BeEmpty();
+        Assert.Contains("ParentAssembly.wasm", failure.Message);
+        Assert.IsType<HttpRequestException>(failure.InnerException);
     }
 
     [Fact]
@@ -101,13 +100,15 @@ public class CascadeLoadingIntegrationTests
         var assemblyBytes = TestSetup.CreateDummyAssemblyBytes();
         var parentAssembly = TestSetup.CreateMockAssembly("ParentAssembly",
             [new AssemblyName("ChildAssembly")]);
+        var childAssembly = TestSetup.CreateMockAssembly("ChildAssembly", [new AssemblyName("GrandchildAssembly")]);
+        var grandchildAssembly = TestSetup.CreateMockAssembly("GrandchildAssembly");
 
         var context = TestSetup.CreateContextWithMockHttp(
             new Dictionary<string, byte[]>
             {
-                ["ParentAssembly.wasm"] = assemblyBytes
-                // Child and grandchild assemblies are not provided - simulating
-                // referenced assemblies that may already be loaded or not available
+                ["ParentAssembly.wasm"] = assemblyBytes,
+                ["ChildAssembly.wasm"] = assemblyBytes,
+                ["GrandchildAssembly.wasm"] = assemblyBytes
             });
 
         await using var hostContext = await TestSetup.CreateContext();
@@ -115,7 +116,7 @@ public class CascadeLoadingIntegrationTests
 
         var assemblyLoadContext = Substitute.For<IAssemblyLoadContext>();
         assemblyLoadContext.LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream?>())
-            .Returns(parentAssembly);
+            .Returns(parentAssembly, childAssembly, grandchildAssembly);
 
         var loader = new BlazyAssemblyLoader(
             new AssemblyLoaderOptions { DisableCascadeLoading = false },
@@ -130,9 +131,10 @@ public class CascadeLoadingIntegrationTests
         // Act
         await loader.LoadAssemblyAsync("ParentAssembly.wasm");
 
-        // Assert - Parent should be loaded, cascade loading is attempted for children
         loader.AdditionalAssemblies.Should().Contain(parentAssembly);
-        loader.AdditionalAssemblies.Count.Should().BeGreaterThanOrEqualTo(1);
+        loader.AdditionalAssemblies.Should().Contain(childAssembly);
+        loader.AdditionalAssemblies.Should().Contain(grandchildAssembly);
+        loader.AdditionalAssemblies.Should().HaveCount(3);
+        assemblyLoadContext.Received(3).LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream?>());
     }
 }
-

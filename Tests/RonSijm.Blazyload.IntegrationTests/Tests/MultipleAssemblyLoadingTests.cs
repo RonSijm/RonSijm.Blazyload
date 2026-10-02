@@ -155,6 +155,8 @@ public class MultipleAssemblyLoadingTests
 
         // Assert - Only new assembly should be in the result
         loadedAssemblies.Should().HaveCount(1);
+        Assert.Contains(newAssembly, loadedAssemblies);
+        Assert.Equal(2, loadCount);
         loader.AdditionalAssemblies.Should().HaveCount(2);
     }
 
@@ -184,4 +186,3 @@ public class MultipleAssemblyLoadingTests
         assemblyLoadContext.DidNotReceive().LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream?>());
     }
 }
-

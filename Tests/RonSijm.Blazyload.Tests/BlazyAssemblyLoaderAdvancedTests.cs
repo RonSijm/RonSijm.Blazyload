@@ -33,8 +33,14 @@ public class BlazyAssemblyLoaderAdvancedTests
         return new HttpClient(mockHandler);
     }
 
+    private static Uri GetRequestUri(HttpRequestMessage request)
+    {
+        var uri = request.RequestUri ?? throw new InvalidOperationException("The HTTP test handler requires a request URI.");
+        return uri;
+    }
+
     [Fact]
-    public async Task GetPreloadedAssemblies_ShouldReturnAssemblies_WhenBootJsonExists()
+    public async Task LoadAssembliesAsync_ShouldReturnInitializedAssemblies_WhenHttpSucceeds()
     {
         var bootJson = new BlazorBootModel
         {
@@ -60,18 +66,22 @@ public class BlazyAssemblyLoaderAdvancedTests
         var options = new AssemblyLoaderOptions();
         var serviceProvider = new SyringeServiceProvider(new ServiceCollection());
         var assemblyLoadContext = Substitute.For<IAssemblyLoadContext>();
+        var mockAssembly = Substitute.For<Assembly>();
+        mockAssembly.GetName().Returns(new AssemblyName("TestAssembly"));
+        mockAssembly.GetReferencedAssemblies().Returns(Array.Empty<AssemblyName>());
+        assemblyLoadContext.LoadFromStream(Arg.Any<Stream>(), null).Returns(mockAssembly);
         var logger = Substitute.For<IBlazyLogger>();
         var debuggerDetector = Substitute.For<IDebuggerDetector>();
 
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
 
-        var assemblies = await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" }, false);
+        var assemblies = await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" });
 
-        assemblies.Should().NotBeNull();
+        assemblies.Should().ContainSingle().Which.Should().BeSameAs(mockAssembly);
     }
 
     [Fact]
-    public async Task GetPreloadedAssemblies_ShouldHandleError_WhenBootJsonFails()
+    public async Task LoadAssembliesAsync_ShouldPropagateAndLogDownloadFailure()
     {
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
@@ -86,9 +96,10 @@ public class BlazyAssemblyLoaderAdvancedTests
 
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
 
-        var assemblies = await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" }, false);
+        var failure = await Assert.ThrowsAsync<BlazyAssemblyLoadException>(() => loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" }));
 
-        logger.Received().WriteLine(Arg.Any<Exception>());
+        Assert.IsType<HttpRequestException>(failure.InnerException);
+        logger.Received().WriteLine(failure);
     }
 
     [Fact]
@@ -109,6 +120,8 @@ public class BlazyAssemblyLoaderAdvancedTests
         var serviceProvider = new SyringeServiceProvider(new ServiceCollection());
         var assemblyLoadContext = Substitute.For<IAssemblyLoadContext>();
         var mockAssembly = Substitute.For<Assembly>();
+        mockAssembly.GetName().Returns(new AssemblyName("Test"));
+        mockAssembly.GetReferencedAssemblies().Returns(Array.Empty<AssemblyName>());
         assemblyLoadContext.LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream>()).Returns(mockAssembly);
         var logger = Substitute.For<IBlazyLogger>();
         var debuggerDetector = Substitute.For<IDebuggerDetector>();
@@ -127,7 +140,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         });
 
         var loaderWithBoot = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", bootHttpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
-        await loaderWithBoot.LoadAssembliesAsync(new[] { "Test.wasm" }, false);
+        await loaderWithBoot.LoadAssembliesAsync(new[] { "Test.wasm" });
 
         assemblyLoadContext.Received().LoadFromStream(Arg.Any<Stream>(), null);
     }
@@ -140,7 +153,7 @@ public class BlazyAssemblyLoaderAdvancedTests
 
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            var content = request.RequestUri.ToString().Contains(".pdb") ? pdbBytes : assemblyBytes;
+            var content = GetRequestUri(request).ToString().Contains(".pdb") ? pdbBytes : assemblyBytes;
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new ByteArrayContent(content)
@@ -162,14 +175,14 @@ public class BlazyAssemblyLoaderAdvancedTests
         var bootJson = new BlazorBootModel { Resources = new Resources { Assembly = new Dictionary<string, string>() } };
         var bootHttpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(JsonSerializer.Serialize(bootJson), Encoding.UTF8, "application/json")
                 });
             }
-            var content = request.RequestUri.ToString().Contains(".pdb") ? pdbBytes : assemblyBytes;
+            var content = GetRequestUri(request).ToString().Contains(".pdb") ? pdbBytes : assemblyBytes;
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
             {
                 Content = new ByteArrayContent(content)
@@ -177,7 +190,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         });
 
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", bootHttpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
-        await loader.LoadAssembliesAsync(new[] { "Test.wasm" }, false);
+        await loader.LoadAssembliesAsync(new[] { "Test.wasm" });
 
         assemblyLoadContext.Received().LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream>());
     }
@@ -189,7 +202,7 @@ public class BlazyAssemblyLoaderAdvancedTests
 
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains(".pdb"))
+            if (GetRequestUri(request).ToString().Contains(".pdb"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
             }
@@ -213,14 +226,14 @@ public class BlazyAssemblyLoaderAdvancedTests
         var bootJson = new BlazorBootModel { Resources = new Resources { Assembly = new Dictionary<string, string>() } };
         var bootHttpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(JsonSerializer.Serialize(bootJson), Encoding.UTF8, "application/json")
                 });
             }
-            if (request.RequestUri.ToString().Contains(".pdb"))
+            if (GetRequestUri(request).ToString().Contains(".pdb"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
             }
@@ -231,7 +244,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         });
 
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", bootHttpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
-        await loader.LoadAssembliesAsync(new[] { "Test.wasm" }, false);
+        await loader.LoadAssembliesAsync(new[] { "Test.wasm" });
 
         logger.Received().WriteLine(Arg.Any<string>());
     }
@@ -257,7 +270,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         var bootJson = new BlazorBootModel { Resources = new Resources { Assembly = new Dictionary<string, string>() } };
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -271,7 +284,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         });
 
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
-        await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" }, false);
+        await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" });
 
         logger.Received().WriteLine(Arg.Is<string>(s => s.Contains("Loaded Assembly")));
     }
@@ -302,7 +315,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         var bootJson = new BlazorBootModel { Resources = new Resources { Assembly = new Dictionary<string, string>() } };
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -316,7 +329,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         });
 
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
-        var result = await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" }, false);
+        var result = await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" });
 
         result.Should().NotBeNull();
         assemblyLoadContext.Received(2).LoadFromStream(Arg.Any<Stream>(), null);
@@ -344,7 +357,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         var bootJson = new BlazorBootModel { Resources = new Resources { Assembly = new Dictionary<string, string>() } };
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -358,7 +371,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         });
 
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
-        var result = await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" }, false);
+        var result = await loader.LoadAssembliesAsync(new[] { "TestAssembly.wasm" });
 
         result.Should().NotBeNull();
         assemblyLoadContext.Received(1).LoadFromStream(Arg.Any<Stream>(), null);
@@ -370,6 +383,8 @@ public class BlazyAssemblyLoaderAdvancedTests
     [Fact]
     public async Task LoadAssembliesAsync_ShouldSkipPreloadedAssemblies()
     {
+        var hostAssembly = typeof(object).Assembly;
+        var assemblyFileName = $"{hostAssembly.GetName().Name}.wasm";
         var assemblyBytes = new byte[] { 0x4D, 0x5A, 0x90, 0x00 };
 
         var options = new AssemblyLoaderOptions();
@@ -385,14 +400,14 @@ public class BlazyAssemblyLoaderAdvancedTests
             {
                 Assembly = new Dictionary<string, string>
                 {
-                    ["PreloadedAssembly.wasm"] = "hash"
+                    [assemblyFileName] = "hash"
                 }
             }
         };
 
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -406,9 +421,9 @@ public class BlazyAssemblyLoaderAdvancedTests
         });
 
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
-        var result = await loader.LoadAssembliesAsync(new[] { "PreloadedAssembly.wasm" }, false);
+        var result = await loader.LoadAssembliesAsync(new[] { assemblyFileName });
 
-        result.Should().BeEmpty();
+        Assert.Empty(result);
         assemblyLoadContext.DidNotReceive().LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream>());
     }
 #endif
@@ -437,7 +452,7 @@ public class BlazyAssemblyLoaderAdvancedTests
 
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -453,57 +468,38 @@ public class BlazyAssemblyLoaderAdvancedTests
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
 
         // Try to load "System.Private.CoreLib.wasm" - this should be skipped because it's always loaded in the runtime
-        var result = await loader.LoadAssembliesAsync(new[] { "System.Private.CoreLib.wasm" }, false);
+        var result = await loader.LoadAssembliesAsync(new[] { "System.Private.CoreLib.wasm" });
 
-        result.Should().BeEmpty();
+        Assert.Empty(result);
         assemblyLoadContext.DidNotReceive().LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream>());
     }
 
     [Fact]
     public async Task LoadAssembliesAsync_ShouldSkipRuntimeLoadedAssemblies_WithFingerprintedNames()
     {
-        // This test verifies that fingerprinted assembly names (e.g., "System.Private.CoreLib.abc123xyz.wasm")
-        // are correctly matched to runtime-loaded assemblies (e.g., "System.Private.CoreLib").
-        var assemblyBytes = new byte[] { 0x4D, 0x5A, 0x90, 0x00 };
-
-        var options = new AssemblyLoaderOptions();
-        var serviceProvider = new SyringeServiceProvider(new ServiceCollection());
-        var assemblyLoadContext = Substitute.For<IAssemblyLoadContext>();
-        var logger = Substitute.For<IBlazyLogger>();
-        var debuggerDetector = Substitute.For<IDebuggerDetector>();
-        debuggerDetector.IsAttached.Returns(false);
-
-        var bootJson = new BlazorBootModel
+        var hostAssembly = typeof(object).Assembly;
+        var virtualName = $"{hostAssembly.GetName().Name}.wasm";
+        var fingerprintedName = $"{hostAssembly.GetName().Name}.abc123xyz.wasm";
+        var fingerprintResolver = Substitute.For<IFingerprintResolver>();
+        fingerprintResolver.ResolveFingerprintedName(Arg.Any<string>()).Returns(call => call.Arg<string>());
+        fingerprintResolver.ResolveFingerprintedName(virtualName).Returns(fingerprintedName);
+        var fileLoader = Substitute.For<IAssemblyFileLoader>();
+        var components = new BlazyAssemblyLoaderComponents
         {
-            Resources = new Resources
-            {
-                Assembly = new Dictionary<string, string>()
-            }
+            Options = new AssemblyLoaderOptions(),
+            Logger = Substitute.For<IBlazyLogger>(),
+            StateTracker = new AssemblyStateTracker { PreloadedAssemblies = [] },
+            ExtensionInitializer = Substitute.For<IExtensionInitializer>(),
+            FileLoader = fileLoader,
+            OptionsResolver = Substitute.For<IAssemblyOptionsResolver>(),
+            FingerprintResolver = fingerprintResolver
         };
+        var loader = new BlazyAssemblyLoader(components);
+        var result = await loader.LoadAssembliesAsync([fingerprintedName]);
 
-        var httpClient = CreateMockHttpClient((request, ct) =>
-        {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
-            {
-                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
-                {
-                    Content = new StringContent(JsonSerializer.Serialize(bootJson), Encoding.UTF8, "application/json")
-                });
-            }
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new ByteArrayContent(assemblyBytes)
-            });
-        });
-
-        var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
-
-        // Try to load "System.Private.CoreLib.abc123xyz.wasm" - this should be skipped because System.Private.CoreLib is already loaded
-        // The fingerprint "abc123xyz" (9 chars, alphanumeric) should be stripped to match "System.Private.CoreLib"
-        var result = await loader.LoadAssembliesAsync(new[] { "System.Private.CoreLib.abc123xyz.wasm" }, false);
-
-        result.Should().BeEmpty();
-        assemblyLoadContext.DidNotReceive().LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream>());
+        Assert.Empty(result);
+        Assert.Empty(await loader.LoadAssemblyAsync(fingerprintedName));
+        await fileLoader.DidNotReceive().LoadAssembliesWithOptionsAsync(Arg.Is<List<(string assemblyToLoad, AssemblyOptions options)>>(requests => requests.Count > 0));
     }
 
     [Fact]
@@ -533,7 +529,7 @@ public class BlazyAssemblyLoaderAdvancedTests
 
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -549,7 +545,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
 
         // Try to load "MyCustomAssembly.wasm" - this should NOT be skipped because it's not in the runtime
-        var result = await loader.LoadAssembliesAsync(new[] { "MyCustomAssembly.wasm" }, false);
+        var result = await loader.LoadAssembliesAsync(new[] { "MyCustomAssembly.wasm" });
 
         result.Should().NotBeEmpty();
         assemblyLoadContext.Received(1).LoadFromStream(Arg.Any<Stream>(), null);
@@ -649,7 +645,7 @@ public class BlazyAssemblyLoaderAdvancedTests
         var bootJson = new BlazorBootModel { Resources = new Resources { Assembly = new Dictionary<string, string>() } };
         var httpClient = CreateMockHttpClient((request, ct) =>
         {
-            if (request.RequestUri.ToString().Contains("blazor.boot.json"))
+            if (GetRequestUri(request).ToString().Contains("blazor.boot.json"))
             {
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
@@ -705,5 +701,3 @@ public class BlazyAssemblyLoaderAdvancedTests
         assemblyLoadContext.DidNotReceive().LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream>());
     }
 }
-
-

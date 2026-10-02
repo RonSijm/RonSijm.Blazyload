@@ -145,4 +145,3 @@ public class NavigationBasedLoadingTests
         config.GetAssembly("/page3").Should().Be("OtherAssembly.wasm");
     }
 }
-

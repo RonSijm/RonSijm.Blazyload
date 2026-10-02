@@ -111,7 +111,7 @@ public class CascadeLoadingBeforeBootstrapTests
         var loader = new BlazyAssemblyLoader(options, serviceProvider, "https://example.com/", httpClient, assemblyLoadContext, logger, debuggerDetector, new AssemblyLoadConfiguration());
 
         // Act
-        var result = await loader.LoadAssembliesAsync(new[] { "MainAssembly.wasm" }, false);
+        var result = await loader.LoadAssembliesAsync(new[] { "MainAssembly.wasm" });
 
         // Assert
         // Both assemblies should be loaded

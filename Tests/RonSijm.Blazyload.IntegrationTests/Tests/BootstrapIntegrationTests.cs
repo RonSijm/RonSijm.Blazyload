@@ -16,16 +16,14 @@ public class BootstrapIntegrationTests
     public async Task LoadAssemblyAsync_WithBootstrapper_ShouldInvokeBootstrapMethod()
     {
         // Arrange
-        var bootstrapCalled = false;
         var mockBootstrapper = Substitute.For<IBootstrapper>();
         mockBootstrapper.Bootstrap().Returns(Task.FromResult<IEnumerable<ServiceDescriptor>>(new List<ServiceDescriptor>()));
-        mockBootstrapper.When(x => x.Bootstrap()).Do(_ => bootstrapCalled = true);
 
         var assemblyBytes = TestSetup.CreateDummyAssemblyBytes();
         var mockAssembly = TestSetup.CreateMockAssembly("BootstrapAssembly");
 
         // Configure the mock assembly to return a type that implements IBootstrapper
-        var bootstrapperType = mockBootstrapper.GetType();
+        var bootstrapperType = typeof(IntegrationBootstrapper);
         mockAssembly.GetType("BootstrapAssembly.Properties.BlazyBootstrap").Returns(bootstrapperType);
         mockAssembly.GetTypes().Returns([bootstrapperType]);
 
@@ -34,6 +32,10 @@ public class BootstrapIntegrationTests
 
         await using var hostContext = await TestSetup.CreateContext();
         context.ServiceProvider = hostContext.ServiceProvider;
+        var bootstrapServices = new ServiceCollection();
+        bootstrapServices.AddSingleton(mockBootstrapper);
+        await context.ServiceProvider.LoadServiceDescriptors(bootstrapServices);
+        context.ServiceProvider.Build();
 
         var assemblyLoadContext = Substitute.For<IAssemblyLoadContext>();
         assemblyLoadContext.LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream?>()).Returns(mockAssembly);
@@ -53,6 +55,12 @@ public class BootstrapIntegrationTests
 
         // Assert
         loader.AdditionalAssemblies.Should().Contain(mockAssembly);
+        await mockBootstrapper.Received(1).Bootstrap();
+    }
+
+    public class IntegrationBootstrapper(IBootstrapper bootstrapper) : IBootstrapper
+    {
+        public Task<IEnumerable<ServiceDescriptor>> Bootstrap() => bootstrapper.Bootstrap();
     }
 
     [Fact]
@@ -98,7 +106,7 @@ public class BootstrapIntegrationTests
         // Arrange
         var assemblyBytes = TestSetup.CreateDummyAssemblyBytes();
         var mockAssembly = TestSetup.CreateMockAssembly("NoBootstrapAssembly");
-        mockAssembly.GetType(Arg.Any<string>()).Returns((Type)null);
+        mockAssembly.GetType(Arg.Any<string>()).Returns((Type?)null);
         mockAssembly.GetTypes().Returns([]);
 
         var context = TestSetup.CreateContextWithMockHttp(
@@ -127,4 +135,3 @@ public class BootstrapIntegrationTests
         loader.AdditionalAssemblies.Should().Contain(mockAssembly);
     }
 }
-

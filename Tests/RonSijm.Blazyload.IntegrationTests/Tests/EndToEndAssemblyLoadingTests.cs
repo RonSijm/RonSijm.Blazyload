@@ -128,16 +128,17 @@ public class EndToEndAssemblyLoadingTests
     }
 
     [Fact]
-    public async Task LoadAssemblyAsync_ShouldSkipPreloadedAssemblies()
+    public async Task LoadAssemblyAsync_ShouldSkipAssembliesPreloadedInRuntime()
     {
         // Arrange
+        var assemblyName = typeof(TestSetup).Assembly.GetName().Name!;
         var bootModel = new BlazorBootModel
         {
             Resources = new Resources
             {
                 Assembly = new Dictionary<string, string>
                 {
-                    ["PreloadedAssembly.wasm"] = "hash123"
+                    [$"{assemblyName}.wasm"] = "hash123"
                 }
             }
         };
@@ -162,11 +163,10 @@ public class EndToEndAssemblyLoadingTests
             new AssemblyLoadConfiguration());
 
         // Act
-        var loadedAssemblies = await loader.LoadAssemblyAsync("PreloadedAssembly.wasm");
+        var loadedAssemblies = await loader.LoadAssemblyAsync($"{assemblyName}.wasm");
 
         // Assert - Should not load preloaded assemblies
         loadedAssemblies.Should().BeEmpty();
         assemblyLoadContext.DidNotReceive().LoadFromStream(Arg.Any<Stream>(), Arg.Any<Stream?>());
     }
 }
-
