@@ -2,6 +2,7 @@
 
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.props" />
   <Import Project="..\..\..\BuildSettings\Include.Fluxor.Blazor.Web.props" />
+  <Import Project="..\..\..\BuildSettings\Include.RonSijm.Syringe.Fluxor.props" />
   <Import Project="..\..\..\BuildSettings\DependencyInjectionAbstractionsForFramework.props" />
 
   <PropertyGroup>
@@ -10,4 +11,3 @@
     <ProjectReferenceId>6042c349-9b4a-531d-bb64-599e822e8f2d</ProjectReferenceId>
   </PropertyGroup>
 </Project>
-

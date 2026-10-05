@@ -1,5 +1,6 @@
-﻿using Fluxor;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RonSijm.Syringe;
+using RonSijm.Syringe.DependencyInjection;
 
 namespace RonSijm.FluxorDemo.Blazyload.WeatherLib4.Component.Properties;
 
@@ -9,10 +10,9 @@ public class BlazyBootstrap
     // ReSharper disable once UnusedMember.Global
     public Task<IEnumerable<ServiceDescriptor>> Bootstrap()
     {
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddFluxor(options =>
+        var serviceCollection = new SyringeServiceCollection();
+        serviceCollection.AddFluxorLibrary(options =>
         {
-            options.WithLifetime(StoreLifetime.Singleton);
             options.ScanAssemblies(typeof(BlazyBootstrap).Assembly);
         });
 

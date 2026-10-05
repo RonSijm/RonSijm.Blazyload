@@ -344,6 +344,8 @@ Blazyload has optional Fluxor integration available as a **completely standalone
 
 **Note:** Blazyload works perfectly fine on its own without the Fluxor package. The Fluxor integration package is only needed if you want to lazy-load additional Fluxor states, reducers, and effects after the initial application load.
 
+Inside a lazy library's bootstrap, use `AddFluxorLibrary(...)` on a `SyringeServiceCollection` to register its features. This connects the library's states, reducers and effects to the host's existing store. Reserve Fluxor's ordinary `AddFluxor(...)` for configuring a standalone application's store, not a lazy library.
+
 ## Setup with Fluxor
 
 <!-- snippet: CodeExample-FluxorSetup -->
@@ -464,6 +466,13 @@ See: https://github.com/dotnet/runtime/issues/92965#issuecomment-1746340200
 - **Blazyload 1.3**: Loading PDB Symbols while debugger is attached
 - **Blazyload 1.2**: Added Support for .NET 8
 
+## Related Projects
+
+Blazyload focuses on loading assemblies and their dependencies in a running Blazor WebAssembly app. These related libraries cover dependency injection and an optional plugin framework; you can use Blazyload without adopting the Components framework.
+
+- **[RonSijm.Syringe](https://github.com/RonSijm/RonSijm.Syringe)** - The general-purpose dependency injection container used by Blazyload, with support for registering services after the application has started.
+- **[RonSijm.Blazyload.Components](https://github.com/RonSijm/RonSijm.Blazyload.Components)** - An optional, more opinionated Blazor plugin framework for discovering, loading and rendering components by name.
+
 ## Contributing
 
 - **Bugfixes**: Submit a PR with a bugfix + a unit-test
@@ -472,4 +481,3 @@ See: https://github.com/dotnet/runtime/issues/92965#issuecomment-1746340200
 ## Contact
 
 Discord: https://discord.gg/cDC6VkUn2X
-

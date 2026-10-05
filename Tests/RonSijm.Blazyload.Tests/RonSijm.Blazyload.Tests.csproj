@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\..\BuildSettings\Include.RonSijm.Syringe.props" />
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -28,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\RonSijm.Syringe\src\Main\RonSijm.Syringe\RonSijm.Syringe.csproj" />
     <ProjectReference Include="..\..\src\RonSijm.Blazyload\RonSijm.Blazyload.csproj" />
   </ItemGroup>
 

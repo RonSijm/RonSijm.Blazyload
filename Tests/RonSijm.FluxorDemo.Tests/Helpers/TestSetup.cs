@@ -1,6 +1,8 @@
 ﻿using Fluxor;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.JSInterop;
 using RonSijm.Blazyload;
 using RonSijm.FluxorDemo.Blazyload.HostLib.Wiring;
 using RonSijm.Syringe;
@@ -16,6 +18,13 @@ public static class TestSetup
             DefaultBuilder = Host.CreateDefaultBuilder()
         };
 
+        var navigation = new TestNavigationManager();
+        navigation.Configure();
+        result.DefaultBuilder.ConfigureServices(services =>
+        {
+            services.AddSingleton<NavigationManager>(navigation);
+            services.AddSingleton<IJSRuntime, TestJSRuntime>();
+        });
         result.DefaultBuilder.UseBlazyload(DependencyInjectionService.CreateOptions(false));
 
         result.Host = result.DefaultBuilder.Build();
@@ -27,6 +36,18 @@ public static class TestSetup
 
         return result;
     }
+
+    private sealed class TestNavigationManager() : NavigationManager
+    {
+        public void Configure() => Initialize("https://example.test/", "https://example.test/");
+        protected override void NavigateToCore(string uri, bool forceLoad) => throw new NotSupportedException("Navigation is not available in the Fluxor unit-test host.");
+    }
+
+    private sealed class TestJSRuntime() : IJSRuntime
+    {
+        public ValueTask<TValue> InvokeAsync<TValue>(string identifier, object[] args) => throw new NotSupportedException("Browser JavaScript is not available in the Fluxor unit-test host.");
+        public ValueTask<TValue> InvokeAsync<TValue>(string identifier, CancellationToken cancellationToken, object[] args) => throw new NotSupportedException("Browser JavaScript is not available in the Fluxor unit-test host.");
+    }
 }
 
 public class FluxorTestContext
@@ -37,4 +58,3 @@ public class FluxorTestContext
     public IStore Store { get; set; }
     public IDispatcher Dispatcher { get; set; }
 }
-
